@@ -103,6 +103,28 @@ module SwitchUser
       end
     end
 
+    def show
+      puts
+
+      file_name = File.join(aws_root_dir,'credentials')
+      if File.exist? file_name
+        system "cat #{file_name}"
+      else
+        raise "ERROR: #{file_name} does not exists"
+      end
+
+      puts
+
+      file_name = File.join(aws_root_dir,'config')
+      if File.exist? file_name
+        system "cat #{file_name}"
+      else
+         raise "ERROR: #{file_name} does not exists"
+      end
+      
+      puts
+    end
+
     def list
       users = Hash.new
 

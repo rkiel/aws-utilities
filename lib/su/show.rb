@@ -2,20 +2,20 @@ require_relative './base'
 
 module SwitchUser
 
-  class List < SwitchUser::Base
+  class Show < SwitchUser::Base
 
     def valid?
       argv.size == 1
     end
 
     def help
-      "#{script_name} list"
+      "#{script_name} show"
     end
 
     def execute
 
       begin
-        list
+        show
       rescue => e
         puts e.message
       end

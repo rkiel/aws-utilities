@@ -10,6 +10,7 @@ module SwitchUser
       :initialize,
       :list,
       :remove,
+      :show,
       :tab,
       :use
     ].sort

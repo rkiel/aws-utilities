@@ -4,7 +4,6 @@ module SwitchUser
 
   class Add < SwitchUser::Base
 
-
     def valid?
       argv.size == 6
     end

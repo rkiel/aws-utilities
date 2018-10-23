@@ -4,7 +4,6 @@ module SwitchUser
 
   class Remove < SwitchUser::Base
 
-
     def valid?
       argv.size == 3
     end
