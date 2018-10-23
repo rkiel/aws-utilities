@@ -1,10 +1,10 @@
 ## Introduction
 
-This is a collection of simple command-line scripts, bash aliases, and bash utilities that make using AWS CLI even easier.
+This is a collection of simple command-line scripts, bash aliases, and bash utilities that make using the AWS CLI even easier.
 
 The command-line scripts include:
 
-* [awssu](docs/AWSSU.md) - make working with multiple AWS CLI profiles easier
+* [awssu](docs/AWSSU.md) - makes working with multiple AWS CLI profiles easier
 
 The command-line scripts are written in Ruby 2.x using just the standard libraries and do not require any gems to be installed.
 For OS X users, these should just work out-of-box.
