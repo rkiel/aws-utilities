@@ -6,6 +6,7 @@ awssu help
 awssu initialize account user
 awssu list
 awssu remove account user
+awssu safe
 awssu show
 awssu use account user
 ```
