@@ -1,0 +1,10 @@
+function get_scripts_commands()
+{
+  if [ -z $2 ] ; then
+    COMPREPLY=(`awssu tab`)
+  else
+    COMPREPLY=(`awssu tab $2`)
+  fi
+}
+
+complete -F get_scripts_commands awssu
