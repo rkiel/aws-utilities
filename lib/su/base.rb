@@ -42,10 +42,12 @@ module SwitchUser
       File.join(aws_root_dir,'awssu')
     end
 
-    def init account, user
+    def legacy account, user
       src_file_name = File.join(aws_root_dir,'credentials')
       dest_file_name = File.join(awssu_root_dir,account,user,'credentials')
-      if File.exist? dest_file_name
+      if not File.exist? src_file_name
+        raise "ERROR: #{src_file_name} does not exist"
+      elsif File.exist? dest_file_name
         raise "ERROR: #{dest_file_name} already exists"
       else
         FileUtils.cp src_file_name, dest_file_name
@@ -54,7 +56,9 @@ module SwitchUser
 
       src_file_name =  File.join(aws_root_dir,'config')
       dest_file_name = File.join(awssu_root_dir,account,user,'config')
-      if File.exist? dest_file_name
+      if not File.exist? src_file_name
+        raise "ERROR: #{src_file_name} does not exist"
+      elsif File.exist? dest_file_name
         raise "ERROR: #{dest_file_name} already exists"
       else
         FileUtils.cp src_file_name, dest_file_name
@@ -110,7 +114,7 @@ module SwitchUser
       if File.exist? file_name
         system "cat #{file_name}"
       else
-        raise "ERROR: #{file_name} does not exists"
+        puts "ERROR: #{file_name} does not exists"
       end
 
       puts
@@ -119,7 +123,7 @@ module SwitchUser
       if File.exist? file_name
         system "cat #{file_name}"
       else
-         raise "ERROR: #{file_name} does not exists"
+         puts "ERROR: #{file_name} does not exists"
       end
 
       puts

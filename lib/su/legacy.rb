@@ -2,14 +2,14 @@ require_relative './base'
 
 module SwitchUser
 
-  class Initialize < SwitchUser::Base
+  class Legacy < SwitchUser::Base
 
     def valid?
       argv.size == 3
     end
 
     def help
-      "#{script_name} initialize account user"
+      "#{script_name} legacy account user"
     end
 
     def execute
@@ -18,7 +18,7 @@ module SwitchUser
       user = argv.shift
 
       begin
-        init account, user
+        legacy account, user
       rescue => e
         puts e.message
       end
