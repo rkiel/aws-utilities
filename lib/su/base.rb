@@ -121,8 +121,22 @@ module SwitchUser
       else
          raise "ERROR: #{file_name} does not exists"
       end
-      
+
       puts
+    end
+
+    def safe
+      file_name = File.join(aws_root_dir,'credentials')
+      if File.exist? file_name
+        puts "Removing #{file_name}"
+        File.delete file_name
+      end
+
+      file_name = File.join(aws_root_dir,'config')
+      if File.exist? file_name
+        puts "Removing #{file_name}"
+        File.delete file_name
+      end
     end
 
     def list
