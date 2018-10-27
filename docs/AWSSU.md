@@ -1,4 +1,4 @@
-# aws-utilities
+# awssu - AWS switch user profile
 
 ```bash
 awssu add account user pathToCsvFile region format

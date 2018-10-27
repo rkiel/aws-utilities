@@ -89,7 +89,7 @@ module SwitchUser
       src_file_name = File.join(awssu_root_dir,account,user,'credentials')
       dest_file_name = File.join(aws_root_dir,'credentials')
       if File.exist? src_file_name
-        puts "Updating #{dest_file_name}"
+        puts "Replacing #{dest_file_name}"
         FileUtils.cp src_file_name, dest_file_name
         File.chmod(0600, dest_file_name)
       else
@@ -99,7 +99,7 @@ module SwitchUser
       src_file_name = File.join(awssu_root_dir,account,user,'config')
       dest_file_name =  File.join(aws_root_dir,'config')
       if File.exist? src_file_name
-        puts "Updating #{dest_file_name}"
+        puts "Replacing #{dest_file_name}"
         FileUtils.cp src_file_name, dest_file_name
         File.chmod(0600, dest_file_name)
       else
