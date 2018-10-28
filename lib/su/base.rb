@@ -42,6 +42,27 @@ module SwitchUser
       File.join(aws_root_dir,'awssu')
     end
 
+    def mkdir (path)
+      FileUtils.mkdir_p(path)
+      File.chmod(0700, path)
+    end
+
+    def lock_down (file_name)
+      File.chmod(0600,file_name)
+    end
+
+    def file_must_exist (file_name)
+      raise "ERROR: #{file_name} does not exists" unless File.exist? file_name
+    end
+
+    def file_not_must_exist (file_name)
+      raise "ERROR: #{file_name} already exists" if File.exist? file_name
+    end
+
+    def log (msg)
+      puts msg.gsub(Regexp.new(ENV['HOME']), '~')
+    end
+
     def legacy account, user
       src_file_name = File.join(aws_root_dir,'credentials')
       dest_file_name = File.join(awssu_root_dir,account,user,'credentials')
@@ -168,54 +189,6 @@ module SwitchUser
       end
     end
 
-    def create account, user, path_to_csv_file, region, format
-      base_dir = File.join(awssu_root_dir,account,user)
-
-      FileUtils.mkdir_p(base_dir)
-
-      file_name = path_to_csv_file
-      if File.exist? file_name
-        arr_of_arrs = CSV.read(path_to_csv_file)
-        ignore_stuff = ["Access key ID", "Secret access key"].map {|x| x.downcase}
-        arr_of_arrs = arr_of_arrs.reject {|x| ignore_stuff.include? x[0].downcase}
-      else
-        raise "ERROR: #{file_name} does not exists"
-      end
-
-      file_name = File.join(base_dir, 'credentials')
-      if File.exist? file_name
-        raise "ERROR: #{file_name} already exists"
-      else
-        arr_of_arrs.each do |row|
-          puts "Adding #{file_name}"
-          File.open(file_name, "w") do |f|
-            f.puts ";"
-            f.puts "; #{account} #{user}"
-            f.puts ";"
-            f.puts "[default]"
-            f.puts "aws_access_key_id = #{row[0]}"
-            f.puts "aws_secret_access_key = #{row[1]}"
-          end
-          File.chmod(0600,file_name)
-        end
-      end
-
-      file_name = File.join(base_dir, 'config')
-      if File.exist? file_name
-        raise "ERROR: #{file_name} already exists"
-      else
-        puts "Adding #{file_name}"
-        File.open(file_name, "w") do |f|
-          f.puts ";"
-          f.puts "; #{account} #{user}"
-          f.puts ";"
-          f.puts "[default]"
-          f.puts "region = #{region}"
-          f.puts "output = #{format}"
-        end
-        File.chmod(0600,file_name)
-      end
-    end
 
   end
 
