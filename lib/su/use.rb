@@ -18,9 +18,15 @@ module SwitchUser
       user = argv.shift
 
       begin
-        use account, user
+        ['credentials','config'].each do |name|
+          src_file_name = File.join(awssu_root_dir,account,user, name)
+          dest_file_name = File.join(aws_root_dir, name)
+          file_must_exist src_file_name
+          log "Replacing #{dest_file_name}"
+          copy src_file_name, dest_file_name
+        end
       rescue => e
-        puts e.message
+        log e.message
       end
     end
   end

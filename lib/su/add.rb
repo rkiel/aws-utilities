@@ -75,7 +75,7 @@ module SwitchUser
         end
         lock_down file_name
       rescue => e
-        puts e.message
+        log e.message
       end
     end
   end

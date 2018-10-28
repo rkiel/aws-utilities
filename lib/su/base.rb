@@ -51,6 +51,11 @@ module SwitchUser
       File.chmod(0600,file_name)
     end
 
+    def copy src_file_name, dest_file_name
+      FileUtils.cp src_file_name, dest_file_name
+      File.chmod(0600, dest_file_name)
+    end
+    
     def file_must_exist (file_name)
       raise "ERROR: #{file_name} does not exists" unless File.exist? file_name
     end
@@ -103,28 +108,6 @@ module SwitchUser
         File.delete file_name
       else
         puts "Missing #{file_name}"
-      end
-    end
-
-    def use account, user
-      src_file_name = File.join(awssu_root_dir,account,user,'credentials')
-      dest_file_name = File.join(aws_root_dir,'credentials')
-      if File.exist? src_file_name
-        puts "Replacing #{dest_file_name}"
-        FileUtils.cp src_file_name, dest_file_name
-        File.chmod(0600, dest_file_name)
-      else
-        raise "ERROR: #{src_file_name} does not exists"
-      end
-
-      src_file_name = File.join(awssu_root_dir,account,user,'config')
-      dest_file_name =  File.join(aws_root_dir,'config')
-      if File.exist? src_file_name
-        puts "Replacing #{dest_file_name}"
-        FileUtils.cp src_file_name, dest_file_name
-        File.chmod(0600, dest_file_name)
-      else
-         raise "ERROR: #{src_file_name} does not exists"
       end
     end
 
