@@ -2,14 +2,14 @@ require_relative './base'
 
 module SwitchUser
 
-  class Legacy < SwitchUser::Base
+  class Export < SwitchUser::Base
 
     def valid?
       argv.size == 3
     end
 
     def help
-      "#{script_name} legacy account user"
+      "#{script_name} export account user"
     end
 
     def execute

@@ -7,8 +7,8 @@ module SwitchUser
     COMMANDS = [
       :add,
       :config,
+      :export,
       :help,
-      :legacy,
       :list,
       :remove,
       :safe,
