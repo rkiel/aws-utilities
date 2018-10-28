@@ -18,7 +18,12 @@ module SwitchUser
       user = argv.shift
 
       begin
-        remove account, user
+        ['credentials','config'].each do |name|
+          file_name = File.join(awssu_root_dir,account,user,name)
+          file_must_exist file_name
+          log "Removing #{file_name}"
+          File.delete file_name
+        end
       rescue => e
         puts e.message
       end

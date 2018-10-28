@@ -92,25 +92,6 @@ module SwitchUser
       end
     end
 
-
-    def remove account, user
-      file_name = File.join(awssu_root_dir,account,user,'credentials')
-      if File.exist? file_name
-        puts "Removing #{file_name}"
-        File.delete file_name
-      else
-        puts "Missing #{file_name}"
-      end
-
-      file_name = File.join(awssu_root_dir,account,user,'config')
-      if File.exist? file_name
-        puts "Removing #{file_name}"
-        File.delete file_name
-      else
-        puts "Missing #{file_name}"
-      end
-    end
-
     def safe
       file_name = File.join(aws_root_dir,'credentials')
       if File.exist? file_name
