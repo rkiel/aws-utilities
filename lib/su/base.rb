@@ -55,7 +55,7 @@ module SwitchUser
       FileUtils.cp src_file_name, dest_file_name
       File.chmod(0600, dest_file_name)
     end
-    
+
     def file_must_exist (file_name)
       raise "ERROR: #{file_name} does not exists" unless File.exist? file_name
     end
@@ -109,28 +109,6 @@ module SwitchUser
       else
         puts "Missing #{file_name}"
       end
-    end
-
-    def show
-      puts
-
-      file_name = File.join(aws_root_dir,'credentials')
-      if File.exist? file_name
-        system "cat #{file_name}"
-      else
-        puts "ERROR: #{file_name} does not exists"
-      end
-
-      puts
-
-      file_name = File.join(aws_root_dir,'config')
-      if File.exist? file_name
-        system "cat #{file_name}"
-      else
-         puts "ERROR: #{file_name} does not exists"
-      end
-
-      puts
     end
 
     def safe

@@ -15,9 +15,15 @@ module SwitchUser
     def execute
 
       begin
-        show
+        ['credentials','config'].each do |name|
+          puts
+          file_name = File.join(aws_root_dir,name)
+          file_must_exist file_name
+          system "cat #{file_name}"
+        end
+        puts
       rescue => e
-        puts e.message
+        log e.message
       end
     end
   end
