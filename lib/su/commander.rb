@@ -6,6 +6,7 @@ module SwitchUser
 
     COMMANDS = [
       :add,
+      :config,
       :help,
       :legacy,
       :list,
