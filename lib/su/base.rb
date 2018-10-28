@@ -92,20 +92,6 @@ module SwitchUser
       end
     end
 
-    def safe
-      file_name = File.join(aws_root_dir,'credentials')
-      if File.exist? file_name
-        puts "Removing #{file_name}"
-        File.delete file_name
-      end
-
-      file_name = File.join(aws_root_dir,'config')
-      if File.exist? file_name
-        puts "Removing #{file_name}"
-        File.delete file_name
-      end
-    end
-
   end
 
 end
