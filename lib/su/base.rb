@@ -125,32 +125,6 @@ module SwitchUser
       end
     end
 
-    def list
-      users = Hash.new
-
-      Dir.chdir(awssu_root_dir) do
-        Dir['*'].each do |account|
-          users[account] = []
-        end
-      end
-
-      users.keys.each do |account|
-        Dir.chdir(File.join(awssu_root_dir,account)) do
-          Dir['*'].each do |user|
-            base_dir = File.join(awssu_root_dir,account,user)
-            users[account] << user if File.exist? File.join(base_dir,'credentials') and File.exist? File.join(base_dir,'config')
-          end
-        end
-      end
-
-      users.keys.sort.each do |account|
-        users[account].each do |user|
-          puts "#{account} #{user}"
-        end
-      end
-    end
-
-
   end
 
 end

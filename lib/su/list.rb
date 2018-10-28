@@ -15,9 +15,32 @@ module SwitchUser
     def execute
 
       begin
-        list
+        puts
+        users = Hash.new
+
+        Dir.chdir(awssu_root_dir) do
+          Dir['*'].each do |account|
+            users[account] = []
+          end
+        end
+
+        users.keys.each do |account|
+          Dir.chdir(File.join(awssu_root_dir,account)) do
+            Dir['*'].each do |user|
+              base_dir = File.join(awssu_root_dir,account,user)
+              users[account] << user if File.exist? File.join(base_dir,'credentials') and File.exist? File.join(base_dir,'config')
+            end
+          end
+        end
+
+        users.keys.sort.each do |account|
+          users[account].each do |user|
+            log "#{account} #{user}"
+          end
+        end
+        puts
       rescue => e
-        puts e.message
+        log e.message
       end
     end
   end
