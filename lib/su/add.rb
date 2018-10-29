@@ -21,12 +21,7 @@ module SwitchUser
       format = argv.shift
 
       begin
-        base_dir = File.join(awssu_root_dir)
-        mkdir(base_dir)
-        base_dir = File.join(awssu_root_dir,account)
-        mkdir(base_dir)
-        base_dir = File.join(awssu_root_dir,account,user)
-        mkdir(base_dir)
+        base_dir = create_path account, user
 
         file_must_exist path_to_csv_file
         arr_of_arrs = CSV.read(path_to_csv_file)

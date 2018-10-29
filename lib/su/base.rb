@@ -68,6 +68,18 @@ module SwitchUser
       puts msg.gsub(Regexp.new(ENV['HOME']), '~')
     end
 
+    def create_path (account, user)
+      base_dir = File.join(awssu_root_dir)
+      mkdir(base_dir)
+      base_dir = File.join(awssu_root_dir,account)
+      mkdir(base_dir)
+      base_dir = File.join(awssu_root_dir,account,user)
+      mkdir(base_dir)
+      puts
+      log "Created #{base_dir}"
+      base_dir
+    end
+
     def write_credentials (file_name, account, user, access_key_id, secret_access_key)
       File.open(file_name, "w") do |f|
         f.puts ";"
@@ -92,28 +104,30 @@ module SwitchUser
       lock_down file_name
     end
 
-    def legacy account, user
-      src_file_name = File.join(aws_root_dir,'credentials')
-      dest_file_name = File.join(awssu_root_dir,account,user,'credentials')
-      if not File.exist? src_file_name
-        raise "ERROR: #{src_file_name} does not exist"
-      elsif File.exist? dest_file_name
-        raise "ERROR: #{dest_file_name} already exists"
-      else
-        FileUtils.cp src_file_name, dest_file_name
-        File.chmod(0600, dest_file_name)
-      end
+    def export_file (file_name, data)
+      file_not_must_exist file_name
+      log "Adding #{file_name}"
+      File.write(file_name, data.join("\n"))
+      lock_down file_name
+    end
 
-      src_file_name =  File.join(aws_root_dir,'config')
-      dest_file_name = File.join(awssu_root_dir,account,user,'config')
-      if not File.exist? src_file_name
-        raise "ERROR: #{src_file_name} does not exist"
-      elsif File.exist? dest_file_name
-        raise "ERROR: #{dest_file_name} already exists"
-      else
-        FileUtils.cp src_file_name, dest_file_name
-        File.chmod(0600, dest_file_name)
+    def read_file (file_name)
+      contents = File.read(file_name)
+      lines = contents.split("\n")
+      lines = lines.map { |x| x.strip }
+      lines = lines.reject { |x| x.match(/^;/) }
+      lines = lines.map { |x| x.sub("[profile ","[") }
+      section = nil
+      data = {}
+      lines.each do |line|
+        if line.match(/\[.+\]/)
+          section = line
+          data[section] = []
+        else
+          data[section].push line
+        end
       end
+      data
     end
 
   end
