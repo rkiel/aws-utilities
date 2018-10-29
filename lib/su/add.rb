@@ -49,6 +49,7 @@ module SwitchUser
           end
         end
 
+        puts
         file_name = File.join(base_dir, 'credentials')
         file_not_must_exist file_name
         log "Adding #{file_name}"
@@ -58,6 +59,7 @@ module SwitchUser
         file_not_must_exist file_name
         log "Adding #{file_name}"
         write_config file_name, account, user, region, format
+        puts
       rescue => e
         log e.message
       end

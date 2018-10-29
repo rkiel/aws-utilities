@@ -15,6 +15,7 @@ module SwitchUser
     def execute
 
       begin
+        puts
         ['credentials','config'].each do |name|
           file_name = File.join(aws_root_dir, name)
           if File.exist? file_name
@@ -22,6 +23,7 @@ module SwitchUser
             File.delete file_name
           end
         end
+        puts
       rescue => e
         log e.message
       end
