@@ -25,15 +25,7 @@ module SwitchUser
         file_name = File.join(base_dir, 'config')
         file_must_exist file_name
         log "Updating #{file_name}"
-        File.open(file_name, "w") do |f|
-          f.puts ";"
-          f.puts "; #{account} #{user}"
-          f.puts ";"
-          f.puts "[default]"
-          f.puts "region = #{region}"
-          f.puts "output = #{format}"
-        end
-        lock_down file_name
+        write_config file_name, account, user, region, format
       rescue => e
         log e.message
       end

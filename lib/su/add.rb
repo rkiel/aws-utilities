@@ -52,28 +52,12 @@ module SwitchUser
         file_name = File.join(base_dir, 'credentials')
         file_not_must_exist file_name
         log "Adding #{file_name}"
-        File.open(file_name, "w") do |f|
-          f.puts ";"
-          f.puts "; #{account} #{user}"
-          f.puts ";"
-          f.puts "[default]"
-          f.puts "aws_access_key_id = #{access_key_id}"
-          f.puts "aws_secret_access_key = #{secret_access_key}"
-        end
-        lock_down file_name
+        write_credentials file_name, account, user, access_key_id, secret_access_key
 
         file_name = File.join(base_dir, 'config')
         file_not_must_exist file_name
         log "Adding #{file_name}"
-        File.open(file_name, "w") do |f|
-          f.puts ";"
-          f.puts "; #{account} #{user}"
-          f.puts ";"
-          f.puts "[default]"
-          f.puts "region = #{region}"
-          f.puts "output = #{format}"
-        end
-        lock_down file_name
+        write_config file_name, account, user, region, format
       rescue => e
         log e.message
       end

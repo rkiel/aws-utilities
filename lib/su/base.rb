@@ -68,6 +68,30 @@ module SwitchUser
       puts msg.gsub(Regexp.new(ENV['HOME']), '~')
     end
 
+    def write_credentials (file_name, account, user, access_key_id, secret_access_key)
+      File.open(file_name, "w") do |f|
+        f.puts ";"
+        f.puts "; #{account} #{user} credentials"
+        f.puts ";"
+        f.puts "[default]"
+        f.puts "aws_access_key_id = #{access_key_id}"
+        f.puts "aws_secret_access_key = #{secret_access_key}"
+      end
+      lock_down file_name
+    end
+
+    def write_config (file_name, account, user, region, format)
+      File.open(file_name, "w") do |f|
+        f.puts ";"
+        f.puts "; #{account} #{user} config"
+        f.puts ";"
+        f.puts "[default]"
+        f.puts "region = #{region}"
+        f.puts "output = #{format}"
+      end
+      lock_down file_name
+    end
+
     def legacy account, user
       src_file_name = File.join(aws_root_dir,'credentials')
       dest_file_name = File.join(awssu_root_dir,account,user,'credentials')
