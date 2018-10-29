@@ -192,3 +192,19 @@ We covered how to configure the AWS CLI from scratch. But what can you do if you
 ```bash
 awssu export
 ```
+
+For example, what if you had previously configured two profiles? The output might look something like the following:
+
+```text
+Enter Account & User for [default]: myCompany devOps
+
+Created ~/.aws/awssu/myCompany/devOps
+Adding ~/.aws/awssu/myCompany/devOps/credentials
+Adding ~/.aws/awssu/myCompany/devOps/config
+
+Enter Account & User for [joseph]: personal Joseph
+
+Created ~/.aws/awssu/personal/Joseph
+Adding ~/.aws/awssu/personal/Joseph/credentials
+Adding ~/.aws/awssu/personal/Joseph/config
+```
