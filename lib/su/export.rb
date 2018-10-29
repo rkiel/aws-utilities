@@ -23,7 +23,8 @@ module SwitchUser
         keys = (credentials.keys + config.keys).uniq
 
         keys.each do |key|
-          print "Enter Account & User for #{key} "
+          puts
+          print "Enter Account & User for #{key}: "
           x = STDIN.gets
           y = x.split(/\s+/).map {|z| z.strip}
           account = y[0]
@@ -36,6 +37,7 @@ module SwitchUser
           file_name = File.join(base_dir, 'config')
           export_file file_name, config[key]
         end
+        puts
       rescue => e
         log e.message
       end
