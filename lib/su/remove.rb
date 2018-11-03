@@ -25,6 +25,16 @@ module SwitchUser
           log "Removing #{file_name}"
           File.delete file_name
         end
+        dir_name = File.join(awssu_root_dir,account,user)
+        log "Removing #{dir_name}"
+        Dir.delete dir_name
+        dirs = list_directory(awssu_root_dir,account)
+        if dirs.empty?
+          dir_name = File.join(awssu_root_dir,account)
+          log "Removing #{dir_name}"
+          Dir.delete dir_name
+        end
+
         puts
       rescue => e
         log e.message
