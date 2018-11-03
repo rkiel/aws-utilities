@@ -54,6 +54,9 @@ module SwitchUser
         file_not_must_exist file_name
         log "Adding #{file_name}"
         write_config file_name, account, user, region, format
+
+        log "Removing #{path_to_csv_file}"
+        File.delete path_to_csv_file
         puts
       rescue => e
         log e.message
