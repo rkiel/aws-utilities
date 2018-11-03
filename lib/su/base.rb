@@ -130,6 +130,15 @@ module SwitchUser
       data
     end
 
+    def list_directory (*path)
+      if Dir.exist? File.join(path)
+        Dir.new(File.join(path)).reject {|x| ['.','..'].include? x}
+      else
+        []
+      end
+    end
+
+
   end
 
 end

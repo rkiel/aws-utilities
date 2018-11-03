@@ -1,10 +1,6 @@
 function get_scripts_commands()
 {
-  if [ -z $2 ] ; then
-    COMPREPLY=(`awssu tab`)
-  else
-    COMPREPLY=(`awssu tab $2`)
-  fi
+  COMPREPLY=(`awssu tab ${COMP_LINE}`)
 }
 
 complete -F get_scripts_commands awssu

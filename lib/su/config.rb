@@ -9,7 +9,7 @@ module SwitchUser
     end
 
     def help
-      "#{script_name} add config user region format"
+      "#{script_name} config account user region format"
     end
 
     def execute
