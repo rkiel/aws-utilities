@@ -2,14 +2,14 @@ require_relative './base'
 
 module SwitchUser
 
-  class To < SwitchUser::Base
+  class Pick < SwitchUser::Base
 
     def valid?
       argv.size == 2
     end
 
     def help
-      "#{script_name} to user"
+      "#{script_name} pick user"
     end
 
     def execute

@@ -169,6 +169,22 @@ module SwitchUser
       users
     end
 
+    def search_for_unique_users
+      data = search_for_users
+
+      users = []
+      data.keys.each do |account|
+        data[account].each do |user|
+          users << user
+        end
+      end
+
+      users.uniq.reject do |user|
+        user_list = users.select { |u| u == user }
+        user_list.size > 1
+      end
+
+    end
   end
 
 end

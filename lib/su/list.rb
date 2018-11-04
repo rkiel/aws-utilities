@@ -19,7 +19,7 @@ module SwitchUser
         data = search_for_users
 
         data.keys.sort.each do |account|
-          users[account].sort.each do |user|
+          data[account].sort.each do |user|
             log "#{account} #{user}"
           end
         end

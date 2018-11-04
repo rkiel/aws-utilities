@@ -10,11 +10,11 @@ module SwitchUser
       :export,
       :help,
       :list,
+      :pick,
       :remove,
       :safe,
       :show,
       :tab,
-      :to,
       :use
     ].sort
 
