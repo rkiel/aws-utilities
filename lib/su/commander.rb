@@ -14,6 +14,7 @@ module SwitchUser
       :safe,
       :show,
       :tab,
+      :to,
       :use
     ].sort
 

@@ -138,6 +138,36 @@ module SwitchUser
       end
     end
 
+    def switchUser (account, user)
+      ['credentials','config'].each do |name|
+        src_file_name = File.join(awssu_root_dir,account,user, name)
+        dest_file_name = File.join(aws_root_dir, name)
+        file_must_exist src_file_name
+        log "Replacing #{dest_file_name}"
+        copy src_file_name, dest_file_name
+      end
+    end
+
+    def search_for_users
+      users = Hash.new
+
+      Dir.chdir(awssu_root_dir) do
+        Dir['*'].each do |account|
+          users[account] = []
+        end
+      end
+
+      users.keys.each do |account|
+        Dir.chdir(File.join(awssu_root_dir,account)) do
+          Dir['*'].each do |user|
+            base_dir = File.join(awssu_root_dir,account,user)
+            users[account] << user if File.exist? File.join(base_dir,'credentials') and File.exist? File.join(base_dir,'config')
+          end
+        end
+      end
+
+      users
+    end
 
   end
 
