@@ -16,13 +16,7 @@ module SwitchUser
 
       begin
         puts
-        ['credentials','config'].each do |name|
-          file_name = File.join(aws_root_dir, name)
-          if File.exist? file_name
-            log "Removing #{file_name}"
-            File.delete file_name
-          end
-        end
+        safe_mode
         puts
       rescue => e
         log e.message

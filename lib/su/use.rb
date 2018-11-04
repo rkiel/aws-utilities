@@ -23,6 +23,9 @@ module SwitchUser
         puts
       rescue => e
         log e.message
+        puts
+        safe_mode
+        puts
       end
     end
   end

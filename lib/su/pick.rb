@@ -32,6 +32,8 @@ module SwitchUser
         elsif accounts.size == 1
           switchUser accounts.first, swithToUser
         else
+          safe_mode
+          puts
           accounts.sort.each do |account|
             log "#{account} #{swithToUser}"
           end
@@ -39,6 +41,9 @@ module SwitchUser
         puts
       rescue => e
         log e.message
+        puts
+        safe_mode
+        puts
       end
     end
   end
