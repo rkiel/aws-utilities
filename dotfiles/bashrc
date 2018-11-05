@@ -1,6 +1,6 @@
-function get_scripts_commands()
+function get_awssu_commands()
 {
   COMPREPLY=(`awssu tab ${COMP_LINE}`)
 }
 
-complete -F get_scripts_commands awssu
+complete -F get_awssu_commands awssu
