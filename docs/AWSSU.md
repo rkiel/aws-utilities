@@ -149,6 +149,8 @@ awssu remove myCompany devOps
 ```bash
 Removing ~/.aws/awssu/myCompany/devOps/credentials
 Removing ~/.aws/awssu/myCompany/devOps/config
+Removing ~/.aws/awssu/myCompany/devOps
+Removing ~/.aws/awssu/myCompany
 ```
 
 #### Changing a Profile
@@ -169,13 +171,45 @@ awssu use personal Joseph
 
 #### Safe Mode
 
-When you are done working for the day, you might want to remove the `default` profile and thus effectively deactivating all your profiles. You could think of this as a safety precaution. The next time you come back to work, you cannot just assume what the `default` profile is. You must be intentional by setting it with `awssu use`. The `awssu safe` command will put you in safe mode.
+When you are done working for the day, you might want to remove the `default` profile and thus effectively deactivating all your profiles. You could think of this as a safety precaution. The next time you come back to work, you cannot just assume what the `default` profile is. You must be intentional by setting it with `awssu use` or `awssu pick`. The `awssu safe` command will put you in safe mode.
 
 ```bash
 awssu safe
 
 Removing ~/.aws/credentials
 Removing ~/.aws/config
+```
+
+Another use of safe mode is built into the `awssu use` and `awssu pick` commands. If either of those commands fail, for any reason, they will switch you into safe mode. So, for example, if you accidentally type an incorrect account or user, you cannot continue on thinking everything is fine. This is especially important if you using are `awssu` in automated scripting.
+
+#### Tab Completion
+
+If you spend much time working with the command-line, you realize that saving key strokes is a big win. In the Unix community, `bash` is probably the most common command-line tool and it has several mechanisms for saving key strokes. In particular, is tab completion. The `awssu` command has support for tab completion. If you ran the `./install/bin/setup` script, it added the following to your `.bashrc` file.
+
+```bash
+function get_awssu_commands()
+{
+  COMPREPLY=(`awssu tab ${COMP_LINE}`)
+}
+
+complete -F get_awssu_commands awssu
+```
+
+The `awssu tab` command exists to support tab completion in two ways. First, with just `awssu` you can use tab completion to see the list of available subcommands. For example,
+
+```text
+aswsu <tab><tab>
+add     config  export  help    list    pick    remove  safe    show    tab     use
+```
+
+Several of the subcommands, such as `remove` and `use`, need the account and user names. You can use tab completion to see the list of available accounts and users. For example,
+
+```text
+aswsu use <tab><tab>
+avengers jla
+
+aswsu use avengers <tab><tab>
+bwidow  cap     hawk    hulk    iman    nfury   thor
 ```
 
 #### Preexisting AWS CLI profile
