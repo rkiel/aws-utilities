@@ -3,4 +3,10 @@ function get_awssu_commands()
   COMPREPLY=(`awssu tab ${COMP_LINE}`)
 }
 
+function get_codecommit_commands()
+{
+  COMPREPLY=(`codecommit tab ${COMP_LINE}`)
+}
+
 complete -F get_awssu_commands awssu
+complete -F get_codecommit_commands codecommit
