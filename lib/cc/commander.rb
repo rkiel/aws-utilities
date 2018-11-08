@@ -6,6 +6,7 @@ module CodeCommit
 
     COMMANDS = [
       :create,
+      :generate,
       :help,
       :tab
     ].sort

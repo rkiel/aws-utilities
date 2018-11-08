@@ -50,9 +50,19 @@ module CodeCommit
       else
         puts "Creating #{file_name}"
         puts
+        region = "us-east-1"
+        sshname = "aws-codecommit-#{region}"
+        user = ENV['USER']
+        home = ENV['HOME']
         data = {
           "AWSREPO" => "my-first-repository",
-          "AWSREGION" => "us-east-1"
+          "AWSREGION" => region,
+          "AWSUSER" => user,
+          "SSHNAME" => sshname,
+          "SSHTYPE" => "rsa",
+          "SSHBITS" => "2048",
+          "SSHPASSPHRASE" => "DontUseThisAsYourRealPassphrase",
+          "SSHFILE" => File.join(home, '.ssh', sshname)
         }
         File.write(file_name, data.to_yaml)
         FileUtils.chmod(0600, file_name)
