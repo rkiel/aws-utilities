@@ -34,6 +34,10 @@ module CodeCommit
 
     end
 
+    def log (msg)
+      puts msg.gsub(Regexp.new(ENV['HOME']), '~')
+    end
+
     def prompt (data, msg, key)
       print "#{msg} [#{data[key]}]: "
       answer = gets
@@ -56,7 +60,7 @@ module CodeCommit
         home = ENV['HOME']
         data = {
           "AWSREPO" => "my-first-repository",
-          "AWSREGION" => region,
+          "AWSREGION" => region ,
           "AWSUSER" => user,
           "SSHNAME" => sshname,
           "SSHTYPE" => "rsa",
@@ -81,6 +85,17 @@ module CodeCommit
     def run_command (cmd)
       puts cmd
       system cmd
+    end
+
+    def remove_file (file_name)
+      if File.exist? file_name
+        log "Removing #{file_name}"
+        File.delete file_name
+      end
+    end
+
+    def lock_down (file_name)
+      File.chmod(0600,file_name)
     end
 
   end
