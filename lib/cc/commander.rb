@@ -5,6 +5,7 @@ module CodeCommit
   class Commander
 
     COMMANDS = [
+      :config,
       :create,
       :generate,
       :help,

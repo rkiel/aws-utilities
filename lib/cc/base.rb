@@ -47,30 +47,35 @@ module CodeCommit
 
     def get_answers
       file_name = 'answers.yml'
+
+      region = "us-east-1"
+      sshname = "aws-codecommit-#{region}"
+      user = ENV['USER']
+      home = ENV['HOME']
+      default_values = {
+        "AWSREPO" => "my-first-repository",
+        "AWSREGION" => region ,
+        "AWSUSER" => user,
+        "SSHNAME" => sshname,
+        "SSHTYPE" => "rsa",
+        "SSHBITS" => "2048",
+        "SSHPASSPHRASE" => "DontUseThisAsYourRealPassphrase",
+        "SSHFILE" => File.join(home, '.ssh', sshname),
+        "SSHCONFIG" => File.join(home, '.ssh', 'config'),
+        "REMOVECONFIG" => 'no'
+      }
+
       if File.exist? file_name
         puts "Reading #{file_name}"
         puts
-        YAML.load_file(file_name)
+        data = YAML.load_file(file_name)
+        default_values.merge(data)
       else
         puts "Creating #{file_name}"
         puts
-        region = "us-east-1"
-        sshname = "aws-codecommit-#{region}"
-        user = ENV['USER']
-        home = ENV['HOME']
-        data = {
-          "AWSREPO" => "my-first-repository",
-          "AWSREGION" => region ,
-          "AWSUSER" => user,
-          "SSHNAME" => sshname,
-          "SSHTYPE" => "rsa",
-          "SSHBITS" => "2048",
-          "SSHPASSPHRASE" => "DontUseThisAsYourRealPassphrase",
-          "SSHFILE" => File.join(home, '.ssh', sshname)
-        }
-        File.write(file_name, data.to_yaml)
+        File.write(file_name, default_values.to_yaml)
         FileUtils.chmod(0600, file_name)
-        data
+        default_values
       end
     end
 
