@@ -100,6 +100,7 @@ module CodeCommit
     end
 
     def lock_down (file_name)
+      log "Lock down #{file_name}"
       File.chmod(0600,file_name)
     end
 

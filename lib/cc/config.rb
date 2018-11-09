@@ -59,7 +59,7 @@ module CodeCommit
         remove_file sshconfig if removeconfig == 'yes'
 
         puts
-        puts "Updating #{sshconfig}"
+        log "Updating #{sshconfig}"
         puts
         open(sshconfig, 'a') do |f|
           [
@@ -71,6 +71,8 @@ module CodeCommit
             f.puts line
           end
         end
+
+        puts
         lock_down sshconfig
 
         puts

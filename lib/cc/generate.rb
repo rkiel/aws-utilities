@@ -38,6 +38,8 @@ module CodeCommit
         remove_file sshfile
         remove_file sshfile + '.pub'
         run_command "ssh-keygen -b #{sshbits} -t #{sshtype} -f #{sshfile} -C #{sshname} -P '#{sshpassphrase}'"
+
+        puts
         lock_down sshfile
         lock_down sshfile + '.pub'
 
