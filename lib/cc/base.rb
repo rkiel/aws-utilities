@@ -34,64 +34,84 @@ module CodeCommit
 
     end
 
-    def log (msg)
+    def log (msg = "")
       puts msg.gsub(Regexp.new(ENV['HOME']), '~')
     end
 
-    def prompt (data, msg, key)
-      print "#{msg} [#{data[key]}]: "
+    def prompt (data, msg, group, key)
+      print "#{msg} [#{data[group][key]}]: "
       answer = gets
-      data[key] = answer.strip.size > 0 ? answer.strip : data[key]
+      data[group][key] = answer.strip.size > 0 ? answer.strip : data[group][key]
       data
     end
 
-    def get_answers
-      file_name = 'answers.yml'
+    def answers_path
+      home = ENV['HOME']
+      File.join(home, '.aws', "codecommit.yml")
+    end
 
+    def ssh_file_path (file_name)
+      home = ENV['HOME']
+      File.join(home, '.ssh', file_name)
+    end
+
+    def ssh_config_path
+      home = ENV['HOME']
+      File.join(home, '.ssh', 'config')
+    end
+
+    def get_answers
       region = "us-east-1"
       sshname = "aws-codecommit-#{region}"
       user = ENV['USER']
-      home = ENV['HOME']
       default_values = {
-        "AWSREPO" => "my-first-repository",
-        "AWSREGION" => region ,
-        "AWSUSER" => user,
-        "SSHNAME" => sshname,
-        "SSHTYPE" => "rsa",
-        "SSHBITS" => "2048",
-        "SSHPASSPHRASE" => "DontUseThisAsYourRealPassphrase",
-        "SSHFILE" => File.join(home, '.ssh', sshname),
-        "SSHCONFIG" => File.join(home, '.ssh', 'config'),
-        "REMOVECONFIG" => 'no'
+        "AWS" => {
+          "REPOSITORY" => "my-first-repository",
+          "REGION" => region,
+          "USER" => user,
+        },
+        "SSH" => {
+          "FILE_NAME" => sshname,
+          "TYPE" => "rsa",
+          "BITS" => "2048",
+          "PASSPHRASE" => "DontUseThisAsYourRealPassphrase",
+          "REMOVE" => 'no'
+        }
       }
-
-      if File.exist? file_name
-        puts "Reading #{file_name}"
+      if File.exist? answers_path
+        log "Reading #{answers_path}"
         puts
-        data = YAML.load_file(file_name)
-        default_values.merge(data)
+        data = YAML.load_file(answers_path)
+        {
+          "AWS" => default_values["AWS"].merge(data["AWS"]),
+          "SSH" => default_values["SSH"].merge(data["SSH"])
+        }
       else
-        puts "Creating #{file_name}"
-        puts
-        File.write(file_name, default_values.to_yaml)
-        FileUtils.chmod(0600, file_name)
+        log "Creating #{answers_path}"
+        File.write(answers_path, default_values.to_yaml)
+        lock_down(answers_path)
+        log
         default_values
       end
     end
 
     def save_answers (data)
-      file_name = 'answers.yml'
-      puts "Saving #{file_name}"
-      puts
-      File.write(file_name, data.to_yaml)
-      FileUtils.chmod(0600, file_name)
+      log "Saving #{answers_path}"
+      File.write(answers_path, data.to_yaml)
+      lock_down(answers_path)
+      log
     end
 
     def run_command (cmd)
-      puts cmd
+      log cmd
       system cmd
     end
 
+    def capture_command (cmd)
+      log cmd
+      `#{cmd}`
+    end
+    
     def remove_file (file_name)
       if File.exist? file_name
         log "Removing #{file_name}"
@@ -100,7 +120,7 @@ module CodeCommit
     end
 
     def lock_down (file_name)
-      log "Lock down #{file_name}"
+      log "Locking down #{file_name}"
       File.chmod(0600,file_name)
     end
 

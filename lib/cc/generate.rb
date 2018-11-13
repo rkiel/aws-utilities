@@ -18,35 +18,38 @@ module CodeCommit
       begin
         puts
         answers = get_answers
-        prompt answers, "AWS User Name", "AWSUSER"
-        prompt answers, "SSH File Name", "SSHNAME"
-        prompt answers, "SSH Key Type", "SSHTYPE"
-        prompt answers, "SSH Key Bit Strength", "SSHBITS"
-        prompt answers, "SSH Passphrase", "SSHPASSPHRASE"
+        prompt answers, "AWS User Name",        "AWS", "USER"
+        prompt answers, "SSH File Name",        "SSH", "FILE_NAME"
+        prompt answers, "SSH Key Type",         "SSH", "TYPE"
+        prompt answers, "SSH Key Bit Strength", "SSH", "BITS"
+        prompt answers, "SSH Passphrase",       "SSH", "PASSPHRASE"
         save_answers answers
 
-        awsuser       = answers['AWSUSER']
-        sshname       = answers['SSHNAME']
-        sshtype       = answers['SSHTYPE']
-        sshbits       = answers['SSHBITS']
-        sshpassphrase = answers['SSHPASSPHRASE']
-        sshfile       = answers['SSHFILE']
+        aws = answers['AWS']
+        ssh = answers['SSH']
+
+        user       = aws['USER']
+        file_name  = ssh['FILE_NAME']
+        type       = ssh['TYPE']
+        bits       = ssh['BITS']
+        passphrase = ssh['PASSPHRASE']
+        file_path  = ssh_file_path(file_name)
 
         puts
         puts "Creating cryptologic keys"
         puts
-        remove_file sshfile
-        remove_file sshfile + '.pub'
-        run_command "ssh-keygen -b #{sshbits} -t #{sshtype} -f #{sshfile} -C #{sshname} -P '#{sshpassphrase}'"
+        remove_file file_path
+        remove_file file_path + '.pub'
+        run_command "ssh-keygen -b #{bits} -t #{type} -f #{file_path} -C #{file_name} -P '#{passphrase}'"
 
         puts
-        lock_down sshfile
-        lock_down sshfile + '.pub'
+        lock_down file_path
+        lock_down file_path + '.pub'
 
         puts
         puts "Uploading public key"
         puts
-        run_command "aws iam upload-ssh-public-key --user-name #{awsuser} --ssh-public-key-body \"$(cat #{sshfile}.pub)\""
+        run_command "aws iam upload-ssh-public-key --user-name #{user} --ssh-public-key-body \"$(cat #{file_path}.pub)\""
 
         puts
         puts "DONE"

@@ -16,20 +16,23 @@ module CodeCommit
       action = argv.shift
 
       begin
-        puts
+        log
         answers = get_answers
-        prompt answers, "CodeCommit Repository Name", "AWSREPO"
-        prompt answers, "Repository in AWS Region", "AWSREGION"
+        prompt answers, "CodeCommit Repository Name", "AWS", "REPOSITORY"
+        prompt answers, "Repository in AWS Region", "AWS", "REGION"
         save_answers answers
 
-        aws_repo = answers['AWSREPO']
-        aws_region = answers['AWSREGION']
-        run_command "aws codecommit create-repository --repository-name #{aws_repo} --region #{aws_region}"
-        puts
-        puts "DONE"
-        puts
+        aws = answers['AWS']
+
+        repository = aws['REPOSITORY']
+        region     = aws['REGION']
+
+        run_command "aws codecommit create-repository --repository-name #{repository} --region #{region}"
+        log
+        log "DONE"
+        log
       rescue => e
-        puts e.message
+        log e.message
       end
     end
   end

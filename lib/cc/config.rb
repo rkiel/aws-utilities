@@ -19,16 +19,18 @@ module CodeCommit
       begin
         puts
         answers = get_answers
-        prompt answers, "AWS User Name", "AWSUSER"
-        prompt answers, "Remove SSH config", "REMOVECONFIG"
-        prompt answers, "Repository in AWS Region", "AWSREGION"
-        prompt answers, "SSH File Name", "SSHNAME"
+        prompt answers, "AWS User Name",            "AWS", "USER"
+        prompt answers, "Repository in AWS Region", "AWS", "REGION"
+        prompt answers, "SSH File Name",            "SSH", "FILE_NAME"
+        prompt answers, "Remove SSH config",        "SSH", "REMOVE"
 
-        awsuser       = answers['AWSUSER']
+        aws  = answers['AWS']
+        ssh  = answers['SSH']
+        user = aws['USER']
 
         puts
         puts "Retrieving public key id"
-        output = `aws iam list-ssh-public-keys --user-name #{awsuser}`
+        output = capture_command "aws iam list-ssh-public-keys --user-name #{user}"
         json = JSON.parse(output)
         keys = json["SSHPublicKeys"]
 
@@ -38,29 +40,26 @@ module CodeCommit
           ids = keys. map { |x| x['SSHPublicKeyId'] }
           puts "More than 1 Id found.  Please choose:"
           ids.each { |id| puts "  #{id}"}
-          prompt answers, "AWS SSH Id", "AWSSSHID"
+          prompt answers, "AWS SSH Id", "AWS", "SSHID"
         else
           ids = keys. map { |x| x['SSHPublicKeyId'] }
-          answers['AWSSSHID'] = ids.first
+          aws['SSHID'] = ids.first
         end
 
-        aws_ssh_id = answers['AWSSSHID']
-        sshname    = answers['SSHNAME']
-        home = ENV['HOME']
-        sshfile = File.join(home, '.ssh', sshname)
-        answers["SSHFILE"] = sshfile
-
         save_answers answers
+        
+        aws_ssh_id = aws['SSHID']
+        sshfile = ssh_file_path(ssh['FILE_NAME'])
 
-        removeconfig  = answers['REMOVECONFIG']
-        sshconfig     = answers['SSHCONFIG']
-        aws_region = answers['AWSREGION']
 
+        sshconfig     = ssh_config_path
+        removeconfig  = ssh['REMOVE']
         remove_file sshconfig if removeconfig == 'yes'
 
         puts
         log "Updating #{sshconfig}"
         puts
+        aws_region = aws['REGION']
         open(sshconfig, 'a') do |f|
           [
             "Host git-codecommit.#{aws_region}.amazonaws.com",
