@@ -18,15 +18,15 @@ module CodeCommit
       begin
         puts
         answers = get_answers
+        aws = answers['AWS']
+        ssh = answers['SSH']
+
         prompt answers, "AWS User Name",        "AWS", "USER"
         prompt answers, "SSH File Name",        "SSH", "FILE_NAME"
         prompt answers, "SSH Key Type",         "SSH", "TYPE"
         prompt answers, "SSH Key Bit Strength", "SSH", "BITS"
         prompt answers, "SSH Passphrase",       "SSH", "PASSPHRASE"
         save_answers answers
-
-        aws = answers['AWS']
-        ssh = answers['SSH']
 
         user       = aws['USER']
         file_name  = ssh['FILE_NAME']

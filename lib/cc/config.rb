@@ -19,13 +19,14 @@ module CodeCommit
       begin
         puts
         answers = get_answers
+        aws  = answers['AWS']
+        ssh  = answers['SSH']
+        
         prompt answers, "AWS User Name",            "AWS", "USER"
         prompt answers, "Repository in AWS Region", "AWS", "REGION"
         prompt answers, "SSH File Name",            "SSH", "FILE_NAME"
         prompt answers, "Remove SSH config",        "SSH", "REMOVE"
 
-        aws  = answers['AWS']
-        ssh  = answers['SSH']
         user = aws['USER']
 
         puts

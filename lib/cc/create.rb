@@ -18,11 +18,12 @@ module CodeCommit
       begin
         log
         answers = get_answers
-        prompt answers, "CodeCommit Repository Name", "AWS", "REPOSITORY"
-        prompt answers, "Repository in AWS Region", "AWS", "REGION"
-        save_answers answers
-
         aws = answers['AWS']
+        ssh = answers['SSH']
+
+        prompt answers, "CodeCommit Repository Name", "AWS", "REPOSITORY"
+        prompt answers, "Repository in AWS Region",   "AWS", "REGION"
+        save_answers answers
 
         repository = aws['REPOSITORY']
         region     = aws['REGION']
