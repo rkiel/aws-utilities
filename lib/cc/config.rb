@@ -47,7 +47,7 @@ module CodeCommit
         end
 
         save_answers answers
-        
+
         aws_ssh_id = aws['SSHID']
         sshfile = ssh_file_path(ssh['FILE_NAME'])
 
@@ -74,11 +74,9 @@ module CodeCommit
         puts
         lock_down sshconfig
 
-        puts
-        puts "DONE"
-        puts
+        done_message
       rescue => e
-        puts e.message
+        error_message(e)
       end
     end
   end

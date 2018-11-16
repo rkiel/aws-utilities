@@ -64,11 +64,13 @@ module CodeCommit
       region = "us-east-1"
       sshname = "aws-codecommit-#{region}"
       user = ENV['USER']
+      home = ENV['HOME']
       default_values = {
         "AWS" => {
           "REPOSITORY" => "my-first-repository",
           "REGION" => region,
           "USER" => user,
+          "PROJECTS" => File.join(home,'projects')
         },
         "SSH" => {
           "FILE_NAME" => sshname,
@@ -107,11 +109,11 @@ module CodeCommit
       system cmd
     end
 
-    def capture_command (cmd)
-      log cmd
+    def capture_command (cmd, log_command = true)
+      log cmd if log_command
       `#{cmd}`
     end
-    
+
     def remove_file (file_name)
       if File.exist? file_name
         log "Removing #{file_name}"
@@ -122,6 +124,17 @@ module CodeCommit
     def lock_down (file_name)
       log "Locking down #{file_name}"
       File.chmod(0600,file_name)
+    end
+
+    def done_message
+      log
+      log "DONE"
+      log
+    end
+
+    def error_message(e)
+      log "ERROR: #{e.message}"
+      log
     end
 
   end

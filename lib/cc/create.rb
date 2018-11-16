@@ -28,11 +28,10 @@ module CodeCommit
         region     = aws['REGION']
 
         run_command "aws codecommit create-repository --repository-name #{repository} --region #{region}"
-        log
-        log "DONE"
-        log
+
+        done_message
       rescue => e
-        log e.message
+        error_message(e)
       end
     end
   end

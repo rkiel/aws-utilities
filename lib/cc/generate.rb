@@ -51,11 +51,9 @@ module CodeCommit
         puts
         run_command "aws iam upload-ssh-public-key --user-name #{user} --ssh-public-key-body \"$(cat #{file_path}.pub)\""
 
-        puts
-        puts "DONE"
-        puts
+        done_message
       rescue => e
-        puts e.message
+        error_message(e)
       end
     end
   end
