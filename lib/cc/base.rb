@@ -133,6 +133,7 @@ module CodeCommit
     end
 
     def error_message(e)
+      log
       log "ERROR: #{e.message}"
       log
     end
