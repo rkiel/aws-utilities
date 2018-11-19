@@ -16,28 +16,14 @@ module CodeCommit
       action = argv.shift
 
       begin
-        puts
-        answers = get_answers
+        answers = prepare_to_connect_to_origin(false)
         aws  = answers['AWS']
         ssh  = answers['SSH']
 
-        prompt answers, "Project directory",          "AWS", "PROJECTS"
-        prompt answers, "CodeCommit Repository Name", "AWS", "REPOSITORY"
+        log
 
         projects = aws['PROJECTS']
         repository = aws['REPOSITORY']
-
-        full_repository_file_path = File.join(projects, repository)
-        raise "Repository #{full_repository_file_path} already exists" if File.exist? full_repository_file_path
-
-        prompt answers, "Repository in AWS Region",   "AWS", "REGION"
-        prompt answers, "SSH File Name",              "SSH", "FILE_NAME"
-        save_answers answers
-
-        ssh_add_to_agent(ssh['FILE_NAME'])
-
-        log
-
         region = aws['REGION']
         Dir.chdir(projects) do
           run_command "git clone ssh://git-codecommit.#{region}.amazonaws.com/v1/repos/#{repository}"
