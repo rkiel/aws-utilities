@@ -2,14 +2,14 @@ require_relative './base'
 
 module CodeCommit
 
-  class Clone < CodeCommit::Base
+  class Add < CodeCommit::Base
 
     def valid?
       argv.size == 1
     end
 
     def help
-      "#{script_name} clone"
+      "#{script_name} add"
     end
 
     def execute
@@ -28,7 +28,7 @@ module CodeCommit
         repository = aws['REPOSITORY']
 
         full_repository_file_path = File.join(projects, repository)
-        raise "Repository #{full_repository_file_path} already exists" if File.exist? full_repository_file_path
+        raise "Repository #{full_repository_file_path} does not exists" unless File.exist? full_repository_file_path
 
         prompt answers, "Repository in AWS Region",   "AWS", "REGION"
         prompt answers, "SSH File Name",              "SSH", "FILE_NAME"
@@ -39,8 +39,10 @@ module CodeCommit
         log
 
         region = aws['REGION']
-        Dir.chdir(projects) do
-          run_command "git clone ssh://git-codecommit.#{region}.amazonaws.com/v1/repos/#{repository}"
+        Dir.chdir(File.join(projects,repository)) do
+          run_command "git remote add origin ssh://git-codecommit.#{region}.amazonaws.com/v1/repos/#{repository}"
+          run_command "git checkout master"
+          run_command "git push -u origin master"
         end
 
         done_message

@@ -104,6 +104,18 @@ module CodeCommit
       log
     end
 
+    def ssh_add_to_agent (file_name)
+      full_ssh_file_path = ssh_file_path(file_name)
+      raise "SSH key #{full_ssh_file_path} does not exist" unless File.exist? full_ssh_file_path
+      identities = capture_command("ssh-add -l", false).split("\n")
+      been_added = identities.reduce(false) { |accum,elem| accum ? accum : elem.include?(full_ssh_file_path) }
+      if been_added
+        log "SSH key #{full_ssh_file_path} already added to ssh-agent"
+      else
+        run_command "ssh-add #{full_ssh_file_path}"
+      end
+    end
+
     def run_command (cmd)
       log cmd
       system cmd
