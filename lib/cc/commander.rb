@@ -20,7 +20,7 @@ module CodeCommit
 
     def initialize (argv)
       key = (argv[0] ? argv[0].to_sym : DEFAULT)
-      @subcommand = CodeCommit::Loader.new(COMMANDS,DEFAULT).create(key,argv)
+      @subcommand = ::CodeCommit::Loader.new(COMMANDS,DEFAULT).create(key,argv)
     end
 
     def valid?

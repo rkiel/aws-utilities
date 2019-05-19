@@ -1,21 +1,12 @@
 require_relative './loader'
 
-module SwitchUser
+module Generate
 
   class Commander
 
     COMMANDS = [
-      :add,
-      :config,
-      :export,
       :help,
-      :list,
-      :pick,
-      :remove,
-      :safe,
-      :show,
-      :tab,
-      :use
+      :tab
     ].sort
 
     DEFAULT = :help
@@ -24,7 +15,7 @@ module SwitchUser
 
     def initialize (argv)
       key = (argv[0] ? argv[0].to_sym : DEFAULT)
-      @subcommand = ::SwitchUser::Loader.new(COMMANDS,DEFAULT).create(key,argv)
+      @subcommand = ::Generate::Loader.new(COMMANDS,DEFAULT).create(key,argv)
     end
 
     def valid?
