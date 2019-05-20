@@ -26,6 +26,11 @@ module Generate
 
       data
     end
+    
+    def cannonical_user_id
+      fn_get_attr(name+'.S3CanonicalUserId')
+    end
+
   end # class
 
 end # module

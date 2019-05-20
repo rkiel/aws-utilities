@@ -23,10 +23,10 @@ module Generate
           'DistributionConfig' => {
             'Origins' => [
               {
-               'DomainName' => fn_get_attr(bucket.name+'.DomainName'),
-                'Id' => fn_join("-", 'S3', fn_ref(bucket.name)),
+               'DomainName' => bucket.domain_name,
+                'Id' => fn_join("-", 'S3', bucket.ref),
                 'S3OriginConfig' => {
-                  'OriginAccessIdentity' => fn_join("/",'origin-access-identity', 'cloudfront', fn_ref(oai.name))
+                  'OriginAccessIdentity' => fn_join("/",'origin-access-identity', 'cloudfront', oai.ref)
                 }
               }
             ],
@@ -36,10 +36,10 @@ module Generate
               'ForwardedValues' => {
                 'QueryString' => false
               },
-              'TargetOriginId' => fn_join("-", 'S3', fn_ref(bucket.name)),
+              'TargetOriginId' => fn_join("-", 'S3', bucket.ref),
               'ViewerProtocolPolicy' => 'redirect-to-https'
             },
-            'Comment' => fn_ref(bucket.name)
+            'Comment' => bucket.ref
           }
         }
       }

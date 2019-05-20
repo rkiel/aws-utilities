@@ -20,15 +20,15 @@ module Generate
       data[name] = {
         'Type' => 'AWS::S3::BucketPolicy',
         'Properties' => {
-          'Bucket' => fn_ref(bucket.name),
+          'Bucket' => bucket.ref,
           'PolicyDocument' => {
             'Statement' => [
               {
                 'Action' => [ 's3:GetObject' ],
                 'Effect' => 'Allow',
-                'Resource' => fn_join("/", fn_get_attr(bucket.name+'.Arn'), "*"),
+                'Resource' => fn_join("/", bucket.arn, "*"),
                 'Principal' => {
-                  'CanonicalUser' => fn_get_attr(oai.name+'.S3CanonicalUserId')
+                  'CanonicalUser' => oai.cannonical_user_id
                 }
               }
             ]

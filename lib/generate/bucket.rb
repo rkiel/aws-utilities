@@ -24,6 +24,11 @@ module Generate
 
       data
     end
+
+    def domain_name
+      fn_get_attr(name+'.DomainName')
+    end
+
   end # class
 
 end # module

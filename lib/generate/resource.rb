@@ -13,7 +13,15 @@ module Generate
     def fn_ref (name)
       { 'Ref' => name }
     end
-    
+
+    def ref
+      fn_ref(name)
+    end
+
+    def arn
+      fn_get_attr(name+'.Arn')
+    end
+
   end
 
 end
