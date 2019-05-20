@@ -3,10 +3,9 @@ require_relative './resource'
 module Generate
 
   class Bucket < ::Generate::Resource
-    attr_reader :name
 
-    def initialize(name)
-      @name = name
+    def initialize(name, suffix = 'Bucket')
+      super(name, suffix)
     end
 
     def key

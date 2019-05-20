@@ -36,10 +36,12 @@ module Generate
       #  File.write(answers_path, data.to_yaml)
       end
 
-      oai = ::Generate::Oai.new('StaticContentOAI')
-      bucket = ::Generate::Bucket.new('StaticContentBucket')
-      bucket_policy = ::Generate::BucketPolicy.new('StaticContentBucketPolicy', bucket, oai)
-      distribution = ::Generate::Distribution.new('StaticContentDistribution', bucket, oai)
+      prefix = 'StaticContent'
+
+      oai = ::Generate::Oai.new(prefix)
+      bucket = ::Generate::Bucket.new(prefix)
+      bucket_policy = ::Generate::BucketPolicy.new(prefix, bucket, oai)
+      distribution = ::Generate::Distribution.new(prefix, bucket, oai)
 
       items = [oai, bucket, bucket_policy, distribution]
 

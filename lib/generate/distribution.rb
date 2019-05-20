@@ -3,10 +3,10 @@ require_relative './resource'
 module Generate
 
   class Distribution < ::Generate::Resource
-    attr_reader :name, :bucket, :oai
+    attr_reader :bucket, :oai
 
-    def initialize(name, bucket, oai)
-      @name = name
+    def initialize(name, bucket, oai, suffix = 'Distribution')
+      super(name, suffix)
       @bucket = bucket
       @oai = oai
     end

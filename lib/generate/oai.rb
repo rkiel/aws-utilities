@@ -3,10 +3,9 @@ require_relative './resource'
 module Generate
 
   class Oai < ::Generate::Resource
-    attr_reader :name
 
-    def initialize(name)
-      @name = name
+    def initialize(name, suffix = 'OAI')
+      super(name, suffix)
     end
 
     def key
@@ -26,7 +25,7 @@ module Generate
 
       data
     end
-    
+
     def cannonical_user_id
       fn_get_attr(name+'.S3CanonicalUserId')
     end

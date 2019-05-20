@@ -2,6 +2,12 @@ module Generate
 
   class Resource
 
+    attr_reader :name
+
+    def initialize(name, suffix)
+      @name = "#{name}#{suffix}"
+    end
+    
     def fn_get_attr (attr)
       { 'Fn::GetAtt' => attr }
     end
