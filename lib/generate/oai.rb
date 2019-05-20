@@ -27,9 +27,12 @@ module Generate
     end
 
     def cannonical_user_id
-      fn_get_attr(name+'.S3CanonicalUserId')
+      fn_get_attr(name, 'S3CanonicalUserId')
     end
 
+    def path_ref
+      fn_join('/', 'origin-access-identity', 'cloudfront', ref)
+    end
   end # class
 
 end # module

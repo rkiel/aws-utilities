@@ -24,9 +24,9 @@ module Generate
             'Origins' => [
               {
                'DomainName' => bucket.domain_name,
-                'Id' => fn_join("-", 'S3', bucket.ref),
+                'Id' => bucket.origin_id,
                 'S3OriginConfig' => {
-                  'OriginAccessIdentity' => fn_join("/",'origin-access-identity', 'cloudfront', oai.ref)
+                  'OriginAccessIdentity' => oai.path_ref
                 }
               }
             ],
@@ -36,7 +36,7 @@ module Generate
               'ForwardedValues' => {
                 'QueryString' => false
               },
-              'TargetOriginId' => fn_join("-", 'S3', bucket.ref),
+              'TargetOriginId' => bucket.origin_id,
               'ViewerProtocolPolicy' => 'redirect-to-https'
             },
             'Comment' => bucket.ref

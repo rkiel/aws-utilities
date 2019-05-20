@@ -7,9 +7,9 @@ module Generate
     def initialize(name, suffix)
       @name = "#{name}#{suffix}"
     end
-    
-    def fn_get_attr (attr)
-      { 'Fn::GetAtt' => attr }
+
+    def fn_get_attr (*attr)
+      { 'Fn::GetAtt' => attr.join('.') }
     end
 
     def fn_join (delim, *items)
@@ -25,7 +25,7 @@ module Generate
     end
 
     def arn
-      fn_get_attr(name+'.Arn')
+      fn_get_attr(name, 'Arn')
     end
 
   end

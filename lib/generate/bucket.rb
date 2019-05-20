@@ -25,9 +25,12 @@ module Generate
     end
 
     def domain_name
-      fn_get_attr(name+'.DomainName')
+      fn_get_attr(name, 'DomainName')
     end
 
+    def origin_id
+      fn_join("-", 'S3', ref)
+    end
   end # class
 
 end # module
