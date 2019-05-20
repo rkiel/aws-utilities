@@ -6,6 +6,7 @@ module Generate
 
     COMMANDS = [
       :help,
+      :static,
       :tab
     ].sort
 
