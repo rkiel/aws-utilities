@@ -7,7 +7,7 @@ module Generate
 
       defaults = {
         'name' => 'aws',
-        'runtime' => 'nodejs10',
+        'runtime' => 'nodejs10.x',
         'stage' => "${opt:stage, self:custom.defaultStage}"
       }
 
