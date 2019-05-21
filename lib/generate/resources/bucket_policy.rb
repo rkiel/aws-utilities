@@ -33,25 +33,25 @@ module Generate
                 }
               },{
                 "Sid" => "DenyIncorrectEncryptionHeader",
-                "Action": ["s3:PutObject"],
+                "Action" => ["s3:PutObject"],
                 "Effect" => "Deny",
                 'Resource' => fn_join("/", bucket.arn, "*"),
                 "Principal" => "*",
                 "Condition" => {
                   "StringNotEquals" => {
-                    "s3:x-amz-server-side-encryption": "AES256"
+                    "s3:x-amz-server-side-encryption" => "AES256"
                   }
                 }
               },
               {
                 "Sid" => "DenyUnEncryptedObjectUploads",
-                "Action": ["s3:PutObject"],
+                "Action" => ["s3:PutObject"],
                 "Effect" => "Deny",
                 'Resource' => fn_join("/", bucket.arn, "*"),
                 "Principal" => "*",
                 "Condition" => {
                   "Null" => {
-                    "s3:x-amz-server-side-encryption": true
+                    "s3:x-amz-server-side-encryption" => true
                   }
                  }
               }
