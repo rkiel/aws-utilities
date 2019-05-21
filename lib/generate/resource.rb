@@ -8,6 +8,11 @@ module Generate
       @name = "#{name}#{suffix}"
     end
 
+    def setPath(object, path, value)
+      parts = path.split('.')
+      something(object, parts, value)
+    end
+
     def fn_get_attr (*attr)
       { 'Fn::GetAtt' => attr.join('.') }
     end
@@ -28,6 +33,18 @@ module Generate
       fn_get_attr(name, 'Arn')
     end
 
+  private
+
+    def something (object, paths, value)
+      if paths.empty?
+        return value
+      else
+        key = paths.shift
+        object[key] = object[key] == nil ? Hash.new : object[key]
+        object[key] = something(object[key], paths, value)
+        object
+      end
+    end
   end
 
 end

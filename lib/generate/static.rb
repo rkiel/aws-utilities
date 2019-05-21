@@ -5,6 +5,10 @@ require_relative './oai'
 require_relative './bucket'
 require_relative './bucket_policy'
 require_relative './distribution'
+require_relative './sections/service'
+require_relative './sections/provider'
+require_relative './sections/custom'
+require_relative './sections/resources'
 
 module Generate
 
@@ -25,15 +29,7 @@ module Generate
         puts "Reading #{answers_path}"
         data = YAML.load_file(answers_path)
       else
-        puts "Creating #{answers_path}"
-
-        data = { }
-
-        setPath(data, 'service', 'TBD')
-        setPath(data, 'provider.name', 'aws')
-        setPath(data, 'provider.runtime', 'nodejs10')
-
-      #  File.write(answers_path, data.to_yaml)
+        data = Hash.new
       end
 
       prefix = 'StaticContent'
@@ -46,35 +42,17 @@ module Generate
       items = [oai, bucket, bucket_policy, distribution]
 
 
-      data['resources'] = Hash.new unless data['resources']
-      resources = data['resources']
-      resources['Resources'] = Hash.new unless resources['Resources']
+      data = Service.new.apply(data)
+      data = Provider.new.apply(data)
+      data = Custom.new.apply(data)
+      data = Resources.new.apply(data, items)
 
-      items.each do |item|
-        resources['Resources'] = resources['Resources'].merge(item.generate)
-      end
-
-      puts data
+      puts "Writing #{answers_path}"
       File.write(answers_path, data.to_yaml)
     end
 
     private
 
-    def something (object, paths, value)
-      if paths.empty?
-        return value
-      else
-        key = paths.shift
-        object[key] = object[key] == nil ? Hash.new : object[key]
-        object[key] = something(object[key], paths, value)
-        object
-      end
-    end
-
-    def setPath(object, path, value)
-      parts = path.split('.')
-      something(object, parts, value)
-    end
 
   end # class
 
