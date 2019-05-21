@@ -1,14 +1,14 @@
 require 'yaml'
 
 require_relative './base'
-require_relative './resources/oai'
-require_relative './resources/bucket'
-require_relative './resources/bucket_policy'
-require_relative './resources/distribution'
-require_relative './sections/service'
-require_relative './sections/provider'
-require_relative './sections/custom'
-require_relative './sections/resources'
+require_relative '../resources/oai'
+require_relative '../resources/bucket'
+require_relative '../resources/bucket_policy'
+require_relative '../resources/distribution'
+require_relative '../sections/service'
+require_relative '../sections/provider'
+require_relative '../sections/custom'
+require_relative '../sections/resources'
 
 module Generate
 

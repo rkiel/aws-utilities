@@ -10,8 +10,8 @@ module Generate
 
     def create key, argv
       key = default unless commands.include? key
-      require_relative "./#{key}"
-      klass = Module.const_get "Generate::#{key.to_s.capitalize}"
+      require_relative "./subcommands/#{key}"
+      klass = Module.const_get "::Generate::#{key.to_s.capitalize}"
       klass.new(argv)
     end
 
