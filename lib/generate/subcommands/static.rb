@@ -41,7 +41,6 @@ module Generate
 
       items = [oai, bucket, bucket_policy, distribution]
 
-
       data = Service.new.apply(data)
       data = Provider.new.apply(data)
       data = Custom.new.apply(data)
@@ -50,9 +49,6 @@ module Generate
       puts "Writing #{answers_path}"
       File.write(answers_path, data.to_yaml)
     end
-
-    private
-
 
   end # class
 
