@@ -32,14 +32,20 @@ module Generate
             ],
             'Enabled' => true,
             'DefaultCacheBehavior' => {
+              'AllowedMethods' => ['GET', 'HEAD'],
               'Compress' =>  true,
               'ForwardedValues' => {
-                'QueryString' => false
+                'QueryString' => false,
+                'Cookies' => {
+                  'Forward' => 'none'
+                }
               },
               'TargetOriginId' => bucket.origin_id,
               'ViewerProtocolPolicy' => 'redirect-to-https'
             },
-            'Comment' => bucket.ref
+            'Comment' => bucket.ref,
+            'HttpVersion' => 'http2',
+            'DefaultRootObject' => 'index.html'
           }
         }
       }
