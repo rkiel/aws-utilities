@@ -6,17 +6,17 @@ module Generate
       data['custom'] ||= Hash.new
 
       defaults = {
-        'defaultStage' => 'dev',
-        'cfHostedZoneId' => 'Z2FDTNDATAQYW2'
+        'defaultStage' => 'dev'
       }
 
       data['custom'] = defaults.merge(data['custom']) # keep any pre-existing custom values
 
-      data['custom']['domainName'] = settings['domainName']
-      data['custom']['serviceName'] = settings['serviceName']
-      data['custom']['fqDomainName'] = settings['domainName']+'.'
+      data['custom']['domainName'] = '${file(./serverless.json).domainName}'
+      data['custom']['serviceName'] = '${file(./serverless.json).serviceName}'
+      data['custom']['cfHostedZoneId'] = '${file(./serverless.json).cfHostedZoneId}'
+      data['custom']['fqDomainName'] = '${self:custom.domainName}.'
 
-      settings['environments'].each do |environment|
+      settings['environments'].sort.each do |environment|
         custom = data['custom']
         custom[environment] ||= Hash.new
         custom[environment]['bucket_name'] = "${self:custom.serviceName}-#{environment}"

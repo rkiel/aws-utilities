@@ -1,4 +1,5 @@
 require 'yaml'
+require 'json'
 
 require_relative './base'
 
@@ -84,14 +85,21 @@ module Generate
     end
 
     def execute
-      file_name = 'serverless.yml'
+      yaml_file_name = 'serverless.yml'
+      json_file_name = 'serverless.json'
 
-      if File.exist? file_name
-        puts "Reading #{file_name}"
-        hash = YAML.load_file(file_name)
+      if File.exist? yaml_file_name
+        puts "Reading #{yaml_file_name}"
+        yaml_hash = YAML.load_file(yaml_file_name)
       else
-        hash = Hash.new
+        yaml_hash = Hash.new
       end
+
+      json_hash = {
+        domainName: settings['domainName'],
+        serviceName: settings['serviceName'],
+        cfHostedZoneId: 'Z2FDTNDATAQYW2' # specified by AWS docs for RecordSet alias of CloudFront
+      }
 
       prefix = 'StaticContent'
 
@@ -105,14 +113,17 @@ module Generate
 
         items = [oai, bucket, bucket_policy, certificate, distribution, record_set]
 
-        hash = Service.new.apply(hash, settings)
-        hash = Provider.new.apply(hash)
-        hash = Custom.new.apply(hash, settings)
-        hash = Resources.new.apply(hash, items)
+        yaml_hash = Service.new.apply(yaml_hash, settings)
+        yaml_hash = Provider.new.apply(yaml_hash)
+        yaml_hash = Custom.new.apply(yaml_hash, settings)
+        yaml_hash = Resources.new.apply(yaml_hash, items)
       end
 
-      puts "Writing #{file_name}"
-      File.write(file_name, hash.to_yaml)
+      puts "Writing #{yaml_file_name}"
+      File.write(yaml_file_name, yaml_hash.to_yaml)
+
+      puts "Writing #{json_file_name}"
+      File.write(json_file_name, JSON.pretty_generate(json_hash))
     end
 
   end # class
