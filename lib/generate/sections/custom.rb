@@ -2,7 +2,7 @@ module Generate
 
   class Custom
 
-    def apply (data)
+    def apply (data, settings)
       data['custom'] ||= Hash.new
 
       defaults = {
@@ -10,6 +10,8 @@ module Generate
       }
 
       data['custom'] = defaults.merge(data['custom'])
+      data['custom'] = data['custom'].merge(settings)
+      data['custom']['FQDN'] = data['custom']['domainName']+'.'
 
       data
     end

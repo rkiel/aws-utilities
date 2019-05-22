@@ -2,9 +2,9 @@ module Generate
 
   class Service
 
-    def apply (data)
+    def apply (data, settings)
       data['service'] ||= Hash.new
-      
+
       if data['service'].is_a? String
         data['service'] = {
           'name' => data['service']
@@ -12,7 +12,7 @@ module Generate
       end
 
       defaults = {
-        'name' => 'TBD'
+        'name' => settings['serviceName']
       }
 
       data['service'] = defaults.merge(data['service'])

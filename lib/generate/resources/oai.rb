@@ -18,7 +18,7 @@ module Generate
         'Type' => 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         'Properties' => {
           'CloudFrontOriginAccessIdentityConfig' => {
-            'Comment' => '${self:service}-${opt:stage}'
+            'Comment' => '${self:service}-${self:provider.stage}'
           }
         }
       }

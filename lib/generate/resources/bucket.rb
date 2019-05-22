@@ -17,7 +17,7 @@ module Generate
       data[name] = {
         'Type' => 'AWS::S3::Bucket',
         'Properties' => {
-          'BucketName' => '${self:service}-${opt:stage}'
+          'BucketName' => '${self:service}-${self:provider.stage}'
         }
       }
 

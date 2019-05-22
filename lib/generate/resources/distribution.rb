@@ -3,12 +3,13 @@ require_relative './resource'
 module Generate
 
   class Distribution < ::Generate::Resource
-    attr_reader :bucket, :oai
+    attr_reader :bucket, :oai, :certificate
 
-    def initialize(name, bucket, oai, suffix = 'Distribution')
+    def initialize(name, bucket, oai, certificate, suffix = 'Distribution')
       super(name, suffix)
       @bucket = bucket
       @oai = oai
+      @certificate = certificate
     end
 
     def key
@@ -45,13 +46,25 @@ module Generate
             },
             'Comment' => bucket.ref,
             'HttpVersion' => 'http2',
-            'DefaultRootObject' => 'index.html'
+            'DefaultRootObject' => 'index.html',
+            'Aliases' => [
+              '${self:provider.stage}.${self:custom.domainName}'
+            ],
+            'ViewerCertificate' => {
+              'AcmCertificateArn' => certificate.ref,
+              'SslSupportMethod' => 'sni-only'
+            }
           }
         }
       }
 
       data
     end
+
+    def domain_name
+      fn_get_attr(name, 'DomainName')
+    end
+
   end # class
 
 end # module
