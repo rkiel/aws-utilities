@@ -23,9 +23,8 @@ module Generate
     def initialize ( argv )
       super(argv)
       domainName = 'domainName'
-      hostedZoneId = 'hostedZoneId'
       serviceName = 'serviceName'
-      raise "-D #{domainName} -H #{hostedZoneId} -S #{serviceName}" unless valid?
+      raise "-D #{domainName} -S #{serviceName}" unless valid?
 
       @settings = Hash.new
       key = "unknown"
@@ -34,8 +33,6 @@ module Generate
           # skip
         elsif (arg == '-D')
           key = domainName
-        elsif (arg == '-H')
-          key = hostedZoneId
         elsif (arg == '-S')
           key = serviceName
         else
@@ -47,7 +44,7 @@ module Generate
     end
 
     def valid?
-      argv.size == 7
+      argv.size == 5
     end
 
     def help

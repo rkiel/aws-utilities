@@ -6,7 +6,8 @@ module Generate
       data['custom'] ||= Hash.new
 
       defaults = {
-        'defaultStage' => 'dev'
+        'defaultStage' => 'dev',
+        'cfHostedZoneId' => 'Z2FDTNDATAQYW2'
       }
 
       data['custom'] = defaults.merge(data['custom'])

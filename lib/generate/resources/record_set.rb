@@ -19,7 +19,8 @@ module Generate
         'Properties' => {
           'AliasTarget' => {
             'DNSName' => distribution.domain_name,
-            'HostedZoneId' => '${self:custom.hostedZoneId}'
+            'HostedZoneId' => '${self:custom.cfHostedZoneId}',
+            'EvaluateTargetHealth' => false
           },
           'HostedZoneName' => '${self:custom.FQDN}',
           'Name' => '${self:provider.stage}.${self:custom.domainName}',
