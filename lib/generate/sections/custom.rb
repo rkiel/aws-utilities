@@ -11,20 +11,21 @@ module Generate
 
       data['custom'] = defaults.merge(data['custom']) # keep any pre-existing custom values
 
-      data['custom']['domainName'] = '${file(./serverless.json).domainName}'
-      data['custom']['serviceName'] = '${file(./serverless.json).serviceName}'
-      data['custom']['cfHostedZoneId'] = '${file(./serverless.json).cfHostedZoneId}'
-      data['custom']['fqDomainName'] = '${self:custom.domainName}.'
+      custom = data['custom']
+
+      ['domainName', 'serviceName', 'cfHostedZoneId'].each do |field|
+        custom[field] = "${file(./serverless.json).#{field}}"
+      end
+      custom['fqDomainName'] = '${self:custom.domainName}.'
 
       settings['environments'].sort.each do |environment|
-        custom = data['custom']
         custom[environment] ||= Hash.new
         custom[environment]['bucket_name'] = "${self:custom.serviceName}-#{environment}"
 
-        parts = []
-        parts << environment unless environment == settings['productionName']
-        parts << ['${self:custom.domainName}']
-        custom[environment]['domain_name'] = parts.join('.')
+        domain_name_parts = []
+        domain_name_parts << environment unless environment == settings['productionName']
+        domain_name_parts << ['${self:custom.domainName}']
+        custom[environment]['domain_name'] = domain_name_parts.join('.')
       end
 
       data
