@@ -2,10 +2,12 @@ module Generate
 
   class Resource
 
-    attr_reader :name
+    attr_reader :name, :environment, :settings
 
-    def initialize(name, suffix)
-      @name = "#{name}#{suffix}"
+    def initialize(environment, name, suffix, settings)
+      @name = "#{name}#{suffix}#{environment.upcase}"
+      @environment = environment
+      @settings = settings
     end
 
     def setPath(object, path, value)

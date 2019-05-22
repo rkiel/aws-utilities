@@ -4,23 +4,23 @@ module Generate
 
   class Certificate < ::Generate::Resource
 
-    attr_reader :settings
-
-    def initialize(name, settings, suffix = 'Certificate')
-      super(name, suffix)
-      @settings = settings
+    def initialize(environment, name, settings, suffix = 'Certificate')
+      super(environment, name, suffix, settings)
     end
 
     def generate
       data = Hash.new
+
+      domain_name = "${self:custom.#{environment}.domain_name}"
+
       data[name] = {
         'Type' => 'AWS::CertificateManager::Certificate',
         'Properties' => {
-         'DomainName' => '${self:provider.stage}.${self:custom.domainName}',
+         'DomainName' => domain_name,
          'DomainValidationOptions' => [
             {
-              'DomainName' => '${self:provider.stage}.${self:custom.domainName}',
-               'ValidationDomain' => '${self:provider.stage}.${self:custom.domainName}'
+              'DomainName' => domain_name,
+              'ValidationDomain' => domain_name
             }
           ]
         }

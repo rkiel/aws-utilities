@@ -4,11 +4,10 @@ module Generate
 
   class RecordSet < ::Generate::Resource
 
-    attr_reader :settings, :distribution
+    attr_reader :distribution
 
-    def initialize(name, settings, distribution, suffix = 'RecordSet')
-      super(name, suffix)
-      @settings = settings
+    def initialize(environment, name, settings, distribution, suffix = 'RecordSet')
+      super(environment, name, suffix, settings)
       @distribution = distribution
     end
 
@@ -22,8 +21,8 @@ module Generate
             'HostedZoneId' => '${self:custom.cfHostedZoneId}',
             'EvaluateTargetHealth' => false
           },
-          'HostedZoneName' => '${self:custom.FQDN}',
-          'Name' => '${self:provider.stage}.${self:custom.domainName}',
+          'HostedZoneName' => '${self:custom.fqDomainName}',
+          'Name' => "${self:custom.#{environment}.domain_name}",
           'Type' => 'A'
         }
       }

@@ -4,8 +4,8 @@ module Generate
 
   class Bucket < ::Generate::Resource
 
-    def initialize(name, suffix = 'Bucket')
-      super(name, suffix)
+    def initialize(environment, name, settings, suffix = 'Bucket')
+      super(environment, name, suffix, settings)
     end
 
     def key
@@ -17,7 +17,7 @@ module Generate
       data[name] = {
         'Type' => 'AWS::S3::Bucket',
         'Properties' => {
-          'BucketName' => '${self:service}-${self:provider.stage}'
+          'BucketName' => "${self:custom.#{environment}.bucket_name}"
         }
       }
 

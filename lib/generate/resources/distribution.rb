@@ -5,8 +5,8 @@ module Generate
   class Distribution < ::Generate::Resource
     attr_reader :bucket, :oai, :certificate
 
-    def initialize(name, bucket, oai, certificate, suffix = 'Distribution')
-      super(name, suffix)
+    def initialize(environment, name, settings, bucket, oai, certificate, suffix = 'Distribution')
+      super(environment, name, suffix, settings)
       @bucket = bucket
       @oai = oai
       @certificate = certificate
@@ -48,7 +48,7 @@ module Generate
             'HttpVersion' => 'http2',
             'DefaultRootObject' => 'index.html',
             'Aliases' => [
-              '${self:provider.stage}.${self:custom.domainName}'
+              "${self:custom.#{environment}.domain_name}"
             ],
             'ViewerCertificate' => {
               'AcmCertificateArn' => certificate.ref,

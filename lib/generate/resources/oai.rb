@@ -4,12 +4,8 @@ module Generate
 
   class Oai < ::Generate::Resource
 
-    def initialize(name, suffix = 'OAI')
-      super(name, suffix)
-    end
-
-    def key
-      name
+    def initialize(environment, name, settings, suffix = 'Oai')
+      super(environment, name, suffix, settings)
     end
 
     def generate
@@ -18,7 +14,7 @@ module Generate
         'Type' => 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         'Properties' => {
           'CloudFrontOriginAccessIdentityConfig' => {
-            'Comment' => '${self:service}-${self:provider.stage}'
+            'Comment' => "${self:custom.#{environment}.bucket_name}"
           }
         }
       }
