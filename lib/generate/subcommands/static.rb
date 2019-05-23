@@ -45,35 +45,6 @@ module Generate
 
       @settings = Hash.new
       settings[environments] = []
-
-      key = "unknown"
-      argv.each do |arg|
-        if (arg == 'static')
-          # skip
-        elsif (arg == '-D')
-          key = domainName
-        elsif (arg == '-S')
-          key = serviceName
-        elsif (arg == '-E')
-          key = environments
-        elsif (arg == '-P')
-          key = productionName
-        else
-          raise "UNKNOWN ARGUMENTS: #{arg}" if key == 'unknown'
-          settings[key] = settings[key].kind_of?(Array) ? settings[key].push(arg) : arg
-          key = "unknown"
-        end
-      end
-      if settings[productionName] and not settings[environments].include? settings[productionName]
-        settings[environments] << settings[productionName]
-      end
-
-      unless settings[domainName] and settings[serviceName]
-        puts
-        puts ([script_name,'static']+required_options+optional_options).join(' ')
-        puts
-        exit
-      end
     end
 
     def valid?
@@ -88,6 +59,46 @@ module Generate
       yaml_file_name = 'serverless.yml'
       json_file_name = 'serverless.json'
 
+      required_fields = ['domainName','serviceName']
+      optional_fields = ['prefix', 'cfHostedZoneId', 'environments', 'productionName']
+
+      puts
+      if File.exist? json_file_name
+        puts "Reading #{json_file_name}"
+        json_hash = JSON.parse(File.read(json_file_name))
+      else
+        puts "WARNING: missing #{json_file_name}"
+        puts "Creating empty #{json_file_name}"
+        json_hash = {}
+        (required_fields+optional_fields).each { |x| json_hash[x] = ''}
+        json_hash['environments'] = []
+        File.write(json_file_name, JSON.pretty_generate(json_hash))
+      end
+
+      required_fields.each do |field|
+        if has_value?(json_hash, field)
+          puts "#{field} = #{json_hash[field]}"
+        else
+          puts
+          puts "ERROR: missing #{field}"
+          exit
+        end
+      end
+      optional_fields.each do |field|
+        if has_value?(json_hash, field)
+          puts "#{field} = #{json_hash[field]}"
+        else
+          puts
+          puts "WARNING: missing #{field}"
+        end
+      end
+      json_hash['prefix'] = get_value(json_hash, 'prefix', 'StaticContent')
+      json_hash['cfHostedZoneId'] = get_value(json_hash, 'cfHostedZoneId', 'Z2FDTNDATAQYW2') # specified by AWS docs for RecordSet alias of CloudFront
+      json_hash['environments'] = get_value(json_hash, 'environments', [])
+      json_hash['productionName'] = get_value(json_hash, 'productionName', '')
+      json_hash['environments'].push(json_hash['productionName']) if has_value?(json_hash, 'productionName')
+
+      puts
       if File.exist? yaml_file_name
         puts "Reading #{yaml_file_name}"
         yaml_hash = YAML.load_file(yaml_file_name)
@@ -95,15 +106,8 @@ module Generate
         yaml_hash = Hash.new
       end
 
-      json_hash = {
-        domainName: settings['domainName'],
-        serviceName: settings['serviceName'],
-        cfHostedZoneId: 'Z2FDTNDATAQYW2' # specified by AWS docs for RecordSet alias of CloudFront
-      }
-
-      prefix = 'StaticContent'
-
-      settings['environments'].each do |environment|
+      prefix = json_hash['prefix']
+      json_hash['environments'].uniq.sort.each do |environment|
         oai = ::Generate::Oai.new(environment, prefix, settings)
         bucket = ::Generate::Bucket.new(environment, prefix, settings)
         bucket_policy = ::Generate::BucketPolicy.new(environment, prefix, settings, bucket, oai)
@@ -122,8 +126,14 @@ module Generate
       puts "Writing #{yaml_file_name}"
       File.write(yaml_file_name, yaml_hash.to_yaml)
 
-      puts "Writing #{json_file_name}"
-      File.write(json_file_name, JSON.pretty_generate(json_hash))
+    end
+
+    def get_value (hash, field, defaultValue)
+      has_value?(hash, field) ? hash[field] : defaultValue
+    end
+
+    def has_value? (hash, field)
+      hash[field] and hash[field].size > 0
     end
 
   end # class
