@@ -18,7 +18,7 @@ module Generate
       end
       custom['fqDomainName'] = '${self:custom.domainName}.'
 
-      json_hash['environments'].sort.each do |environment|
+      json_hash['environments'].each do |environment|
         custom[environment] ||= Hash.new
         custom[environment]['bucket_name'] = "${self:custom.serviceName}-#{environment}"
 
