@@ -99,8 +99,9 @@ module Generate
 
       puts "Writing #{yaml_file_name}"
       File.write(yaml_file_name, yaml_hash.to_yaml)
-
     end
+
+  private
 
     def get_value (hash, field, defaultValue)
       has_value?(hash, field) ? hash[field] : defaultValue

@@ -14,7 +14,7 @@ module Generate
       custom = data['custom']
 
       ['domainName', 'serviceName', 'cfHostedZoneId'].each do |field|
-        custom[field] = "${file(./serverless.json).#{field}}"
+        custom[field] = "${file(./serverless.json):#{field}}"
       end
       custom['fqDomainName'] = '${self:custom.domainName}.'
 
