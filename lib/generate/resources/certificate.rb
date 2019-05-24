@@ -4,8 +4,8 @@ module Generate
 
   class Certificate < ::Generate::Resource
 
-    def initialize(environment, name, settings, suffix = 'Certificate')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, suffix = 'Certificate')
+      super(environment, name, suffix)
     end
 
     def generate

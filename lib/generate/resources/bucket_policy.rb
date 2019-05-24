@@ -5,8 +5,8 @@ module Generate
   class BucketPolicy < ::Generate::Resource
     attr_reader :bucket, :oai
 
-    def initialize(environment, name, settings, bucket, oai, suffix = 'BucketPolicy')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, bucket, oai, suffix = 'BucketPolicy')
+      super(environment, name, suffix)
       @bucket = bucket
       @oai = oai
     end

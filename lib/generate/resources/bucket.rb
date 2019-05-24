@@ -4,8 +4,8 @@ module Generate
 
   class Bucket < ::Generate::Resource
 
-    def initialize(environment, name, settings, suffix = 'Bucket')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, suffix = 'Bucket')
+      super(environment, name, suffix)
     end
 
     def key

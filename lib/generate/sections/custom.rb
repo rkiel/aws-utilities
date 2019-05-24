@@ -2,7 +2,7 @@ module Generate
 
   class Custom
 
-    def apply (data, settings)
+    def apply (data, json_hash)
       data['custom'] ||= Hash.new
 
       defaults = {
@@ -18,12 +18,12 @@ module Generate
       end
       custom['fqDomainName'] = '${self:custom.domainName}.'
 
-      settings['environments'].sort.each do |environment|
+      json_hash['environments'].sort.each do |environment|
         custom[environment] ||= Hash.new
         custom[environment]['bucket_name'] = "${self:custom.serviceName}-#{environment}"
 
         domain_name_parts = []
-        domain_name_parts << environment unless environment == settings['productionName']
+        domain_name_parts << environment unless environment == json_hash['productionName']
         domain_name_parts << ['${self:custom.domainName}']
         custom[environment]['domain_name'] = domain_name_parts.join('.')
       end

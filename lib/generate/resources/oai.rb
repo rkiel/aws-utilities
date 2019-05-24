@@ -4,8 +4,8 @@ module Generate
 
   class Oai < ::Generate::Resource
 
-    def initialize(environment, name, settings, suffix = 'Oai')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, suffix = 'Oai')
+      super(environment, name, suffix)
     end
 
     def generate

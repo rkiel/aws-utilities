@@ -5,8 +5,8 @@ module Generate
   class Distribution < ::Generate::Resource
     attr_reader :bucket, :oai, :certificate
 
-    def initialize(environment, name, settings, bucket, oai, certificate, suffix = 'Distribution')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, bucket, oai, certificate, suffix = 'Distribution')
+      super(environment, name, suffix)
       @bucket = bucket
       @oai = oai
       @certificate = certificate

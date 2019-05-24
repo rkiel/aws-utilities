@@ -6,8 +6,8 @@ module Generate
 
     attr_reader :distribution
 
-    def initialize(environment, name, settings, distribution, suffix = 'RecordSet')
-      super(environment, name, suffix, settings)
+    def initialize(environment, name, distribution, suffix = 'RecordSet')
+      super(environment, name, suffix)
       @distribution = distribution
     end
 

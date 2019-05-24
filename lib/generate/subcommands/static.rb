@@ -19,7 +19,7 @@ module Generate
 
   class Static < ::Generate::Base
 
-    attr_reader :settings, :required_options, :optional_options
+    attr_reader :required_options, :optional_options
 
     def initialize ( argv )
       super(argv)
@@ -42,9 +42,6 @@ module Generate
         puts
         exit
       end
-
-      @settings = Hash.new
-      settings[environments] = []
     end
 
     def valid?
@@ -110,18 +107,18 @@ module Generate
 
       prefix = json_hash['prefix']
       json_hash['environments'].uniq.sort.each do |environment|
-        oai = ::Generate::Oai.new(environment, prefix, settings)
-        bucket = ::Generate::Bucket.new(environment, prefix, settings)
-        bucket_policy = ::Generate::BucketPolicy.new(environment, prefix, settings, bucket, oai)
-        certificate = ::Generate::Certificate.new(environment, prefix, settings)
-        distribution = ::Generate::Distribution.new(environment, prefix, settings, bucket, oai, certificate)
-        record_set = ::Generate::RecordSet.new(environment, prefix, settings, distribution)
+        oai = ::Generate::Oai.new(environment, prefix)
+        bucket = ::Generate::Bucket.new(environment, prefix)
+        bucket_policy = ::Generate::BucketPolicy.new(environment, prefix, bucket, oai)
+        certificate = ::Generate::Certificate.new(environment, prefix)
+        distribution = ::Generate::Distribution.new(environment, prefix, bucket, oai, certificate)
+        record_set = ::Generate::RecordSet.new(environment, prefix, distribution)
 
         items = [oai, bucket, bucket_policy, certificate, distribution, record_set]
 
-        yaml_hash = Service.new.apply(yaml_hash, settings)
+        yaml_hash = Service.new.apply(yaml_hash, json_hash)
         yaml_hash = Provider.new.apply(yaml_hash)
-        yaml_hash = Custom.new.apply(yaml_hash, settings)
+        yaml_hash = Custom.new.apply(yaml_hash, json_hash)
         yaml_hash = Resources.new.apply(yaml_hash, items)
       end
 
