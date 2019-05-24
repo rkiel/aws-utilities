@@ -71,6 +71,8 @@ module Generate
         puts "Creating empty #{json_file_name}"
         json_hash = {}
         (required_fields+optional_fields).each { |x| json_hash[x] = ''}
+        json_hash['prefix'] = 'StaticContent'
+        json_hash['cfHostedZoneId'] = 'Z2FDTNDATAQYW2' # specified by AWS docs for RecordSet alias of CloudFront
         json_hash['environments'] = []
         File.write(json_file_name, JSON.pretty_generate(json_hash))
       end
