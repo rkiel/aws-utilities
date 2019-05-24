@@ -19,33 +19,8 @@ module Generate
 
   class Static < ::Generate::Base
 
-    attr_reader :required_options, :optional_options
-
-    def initialize ( argv )
-      super(argv)
-      domainName = 'domainName'
-      serviceName = 'serviceName'
-      environments = 'environments'
-      productionName = 'productionName'
-      @required_options = [
-        '-D', domainName,
-        '-S', serviceName
-      ]
-      @optional_options = [
-        '-E', 'environmentName',
-        '-P', productionName
-      ]
-
-      if argv.include?('-h')
-        puts
-        puts ([script_name,'static']+required_options+optional_options).join(' ')
-        puts
-        exit
-      end
-    end
-
     def valid?
-      true
+      argv.size == 1
     end
 
     def help
