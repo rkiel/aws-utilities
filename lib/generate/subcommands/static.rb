@@ -78,6 +78,8 @@ module Generate
 
       puts
       puts JSON.pretty_generate(json_hash)
+      puts "Writing #{json_file_name}"
+      File.write(json_file_name, JSON.pretty_generate(json_hash))
 
       puts
       if File.exist? yaml_file_name
