@@ -32,6 +32,8 @@ module Generate
               }
             ],
             'Enabled' => true,
+            # Unfortunately S3 website hosting wasn’t playing nice with ReactRouter
+            # http://aserafin.pl/2016/03/23/react-router-on-amazon-s3/
             'CustomErrorResponses' => [
               {
                 'ErrorCode' => 404,
