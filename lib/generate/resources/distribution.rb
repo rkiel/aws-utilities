@@ -36,6 +36,11 @@ module Generate
             # http://aserafin.pl/2016/03/23/react-router-on-amazon-s3/
             'CustomErrorResponses' => [
               {
+                'ErrorCode' => 403,
+                'ResponseCode' => 200,
+                'ResponsePagePath' => '/index.html'
+              },
+              {
                 'ErrorCode' => 404,
                 'ResponseCode' => 200,
                 'ResponsePagePath' => '/index.html'
