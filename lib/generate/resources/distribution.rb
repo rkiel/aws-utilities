@@ -32,6 +32,13 @@ module Generate
               }
             ],
             'Enabled' => true,
+            'CustomErrorResponses' => [
+              {
+                'ErrorCode' => 404,
+                'ResponseCode' => 200,
+                'ResponsePagePath' => '/index.html'
+              }
+            ],
             'DefaultCacheBehavior' => {
               'AllowedMethods' => ['GET', 'HEAD'],
               'Compress' =>  true,
