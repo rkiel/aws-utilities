@@ -1,24 +1,24 @@
-### Managing Repositories with `codecommit`
+### Managing Repositories with `awscc`
 
-I created the CodeCommit tool (`codecommit`) as a command-line tool to manage AWS CodeCommit repositories. It is written in Ruby 2.x without any gem dependencies. If your computer already has Ruby installed, as do many Unix variants, you should be able to use it out the box. Otherwise, install Ruby.
+I created the CodeCommit tool (`awscc`) as a command-line tool to manage AWS CodeCommit repositories. It is written in Ruby 2.x without any gem dependencies. If your computer already has Ruby installed, as do many Unix variants, you should be able to use it out the box. Otherwise, install Ruby.
 
 ### Step 1 -- Creating a Repository
 
 AWS provides a service, called CodeCommit, which "is a fully-managed source control service that hosts secure Git-based repositories." In order to create a repository in CodeCommit, we need to answer two questions.
 
-* What do I want to call my repository?
-* Where do I want to locate my repository?
+- What do I want to call my repository?
+- Where do I want to locate my repository?
 
 The first question is simple enough but CodeCommit does have some guidelines for names:
 
-> Any combination of letters, numbers, periods, underscores, and dashes between 1 and 100 characters in length. Repository names cannot end in .git and cannot contain any of the following characters: ! ? @ # $ % ^ & \* ( ) + = { } [ ] | \ / > < ~ ` ‘ “ ; :
+> Any combination of letters, numbers, periods, underscores, and dashes between 1 and 100 characters in length. Repository names cannot end in .git and cannot contain any of the following characters: ! ? @ # \$ % ^ & \* ( ) + = { } [ ] | \ / > < ~ ` ‘ “ ; :
 
 In addition, CodeCommit says that a repository name "must be unique in the region for your AWS account". This means that CodeCommit is not an AWS global service but an AWS regional service, and thus repositories are located within a specific region. That brings us to the second question: location. For purposes of this article, we'll just arbitrarily choose to locate it in the `us-east-1` region.
 
-If you have the wrapper CLI installed, we can use the `codecommit create` tool to create the repository.
+If you have the wrapper CLI installed, we can use the `awscc create` tool to create the repository.
 
 ```bash
-codecommit create
+awscc create
 ```
 
 The tool will prompt you to enter the answers to the two questions discussed previously. You can enter any values you want but we can also just hit the enter key for each and go with the default answers listed inside the brackets.
@@ -57,24 +57,24 @@ Lots of information there but the two most useful are the `cloneUrlHttp` and `cl
 
 Setting up access to CodeCommit repositories via SSH first involves generating a pair of cryptologic keys and associating them with your AWS user account. To do that, we have some more questions to answer.
 
-* What is my AWS user account name?
-* What file name to use for the cryptologic keys?
-* Do I want to use the cryptologic keys for all my CodeCommit repositories or just the ones in this region?
-* What is the type and strength of my cryptologic keys?
-* What passphrase to use to protect the cryptologic keys?
+- What is my AWS user account name?
+- What file name to use for the cryptologic keys?
+- Do I want to use the cryptologic keys for all my CodeCommit repositories or just the ones in this region?
+- What is the type and strength of my cryptologic keys?
+- What passphrase to use to protect the cryptologic keys?
 
 Let's answer these questions.
 
-* Since we are already using the AWS CLI, we have an AWS user account and should therefore know its name.
-* The cryptologic keys (public & private) will be stored in files under `~/.ssh/`. The file names can be any valid Unix file name. However, we should never use `id_rsa` as that is the name of the default cryptologic keys.
-* In Step 3, we will have the option to configure SSH to use the cryptologic keys for either all CodeCommit repositories across all the regions or just the ones in a specific region. In this article, we'll choose to limit the key usage to just one region. To capture that choice, we'll include the region name in the file name for the keys.
-* The type and strength of the keys, according to AWS, must be `rsa` and a minimum of 2048 bits.
-* And finally, it is a best practice to protect your private key with a passphrase. However, if for some reason you don't want to, you can set it to an empty string.
+- Since we are already using the AWS CLI, we have an AWS user account and should therefore know its name.
+- The cryptologic keys (public & private) will be stored in files under `~/.ssh/`. The file names can be any valid Unix file name. However, we should never use `id_rsa` as that is the name of the default cryptologic keys.
+- In Step 3, we will have the option to configure SSH to use the cryptologic keys for either all CodeCommit repositories across all the regions or just the ones in a specific region. In this article, we'll choose to limit the key usage to just one region. To capture that choice, we'll include the region name in the file name for the keys.
+- The type and strength of the keys, according to AWS, must be `rsa` and a minimum of 2048 bits.
+- And finally, it is a best practice to protect your private key with a passphrase. However, if for some reason you don't want to, you can set it to an empty string.
 
-We can use the `codecommit generate` tool to generate the cryptologic keys and upload the public key to our AWS user account.
+We can use the `awscc generate` tool to generate the cryptologic keys and upload the public key to our AWS user account.
 
 ```bash
-codecommit generate
+awscc generate
 ```
 
 The tool will prompt you to enter the answers to all the questions. If we just hit the enter key, we can go with the default answers listed inside the brackets. However, by default, the tool uses your Unix user name as the AWS user name. For this article, we'll assume we have an AWS user name of `dev-ops`. The tool has a default SSH file name of `aws-codecommit` and since we chose the `us-east-1` region, it is appends that to the name. And obviously in the real world you would enter your own passphrase but we'll go with the default just to keep things simple.
@@ -130,10 +130,10 @@ With cryptologic keys created and associated with our AWS user account, we need 
 
 SSH supports individual configuration and customization by means of a [config](https://www.ssh.com/ssh/config/) file stored in your `~/.ssh` directory. The config file supports a wide variety of options but we are only concerned with just one. We want the option to change SSH to use our newly created cryptologic keys rather than the default ones (i.e. `id_rsa`). But not for all SSH activity, just when we are accessing CodeCommit repositories.
 
-To do this, we can use the `codecommit config` tool to create or append to the SSH config file.
+To do this, we can use the `awscc config` tool to create or append to the SSH config file.
 
 ```bash
-codecommit config
+awscc config
 ```
 
 The tool will prompt you to enter the answers to several questions many of which we have seen before. One new question is whether or not to overwrite the SSH config file. You may have previously created an SSH config file and the tool needs to know that. If you answer no, it will append to it rather than overwrite. If we just hit the enter key, we can go with the default answers listed inside the brackets.
@@ -177,10 +177,10 @@ The good news is that Steps 2 and 3 are one-time setup steps and you won't have 
 
 ### Step 4a -- Cloning an Empty Repository
 
-If you are starting from scratch with no existing repository on your local computer, you'll want to clone the empty repository we created in CodeCommit in Step 1 to your local computer. That is what the `codecommit clone` tool will do for us.
+If you are starting from scratch with no existing repository on your local computer, you'll want to clone the empty repository we created in CodeCommit in Step 1 to your local computer. That is what the `awscc clone` tool will do for us.
 
 ```bash
-codecommit clone
+awscc clone
 ```
 
 The tool will prompt you to enter the answers to several questions many of which we have seen before. One new question is the project directory. This the directory on your local computer into which you want to clone the repository. If we just hit the enter key, we can go with the default answers listed inside the brackets.
@@ -194,7 +194,7 @@ SSH File Name [aws-codecommit-us-east-1]:
 
 At this point, you would think we were all set and ready to clone the repository using SSH. But alas, there is one remaining road block. Remember back in Step 2, we created our cryptologic keys to use a passphrase? That means each time SSH uses the private key, it will need the passphrase to decrypt it. And in Step 3, we configured SSH to use our private key when accessing a CodeCommit URL. So, whenever we use certain `git` commands, such as `clone`, `pull`, or `push`, they will cause SSH to prompt us for the passphrase. This will get annoying real fast. We can get around this by using the [SSH Agent](https://www.ssh.com/ssh/agent) to keep track of our private keys and passphrases.
 
-The `codecommit clone` tool uses the SSH CLI tool [ssh-add](https://www.ssh.com/ssh/add) to interact with the SSH Agent. First, it uses the `-l` option to get a list of all the private keys the SSH Agent is tracking passphrases. And second, if our newly created private key is not included in that list, it will prompt us to enter the passphrase.
+The `awscc clone` tool uses the SSH CLI tool [ssh-add](https://www.ssh.com/ssh/add) to interact with the SSH Agent. First, it uses the `-l` option to get a list of all the private keys the SSH Agent is tracking passphrases. And second, if our newly created private key is not included in that list, it will prompt us to enter the passphrase.
 
 ```bash
 ssh-add -l
@@ -218,10 +218,10 @@ Congratulations! You are now up and running with your first CodeCommit repositor
 
 ### Step 4b -- Adding an Empty Repository as a Remote
 
-If you are starting with an existing repository on your local computer, you'll want to add the empty repository we created in CodeCommit in Step 1 as the remote `origin` and push out all your local code. That is what the `codecommit add` tool will do for us.
+If you are starting with an existing repository on your local computer, you'll want to add the empty repository we created in CodeCommit in Step 1 as the remote `origin` and push out all your local code. That is what the `awscc add` tool will do for us.
 
 ```bash
-codecommit add
+awscc add
 ```
 
 The tool will prompt you to enter the answers to several questions many of which we have seen before. One new question is the project directory. This the directory on your local computer where your local repository exists. If we just hit the enter key, we can go with the default answers listed inside the brackets.
@@ -235,7 +235,7 @@ SSH File Name [aws-codecommit-us-east-1]:
 
 At this point, you would think we were all set and ready to add the CodeCommit repository interact with it using SSH. But alas, there is one remaining road block. Remember back in Step 2, we created our cryptologic keys to use a passphrase? That means each time SSH uses the private key, it will need the passphrase to decrypt it. And in Step 3, we configured SSH to use our private key when accessing a CodeCommit URL. So, whenever we use certain `git` commands, such as `clone`, `pull`, or `push`, they will cause SSH to prompt us for the passphrase. This will get annoying real fast. We can get around this by using the [SSH Agent](https://www.ssh.com/ssh/agent) to keep track of our private keys and passphrases.
 
-The `codecommit add` tool uses the SSH CLI tool [ssh-add](https://www.ssh.com/ssh/add) to interact with the SSH Agent. First, it uses the `-l` option to get a list of all the private keys the SSH Agent is tracking passphrases. And second, if our newly created private key is not included in that list, it will prompt us to enter the passphrase.
+The `awscc add` tool uses the SSH CLI tool [ssh-add](https://www.ssh.com/ssh/add) to interact with the SSH Agent. First, it uses the `-l` option to get a list of all the private keys the SSH Agent is tracking passphrases. And second, if our newly created private key is not included in that list, it will prompt us to enter the passphrase.
 
 ```bash
 ssh-add -l

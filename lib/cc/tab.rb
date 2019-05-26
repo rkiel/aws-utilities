@@ -22,10 +22,10 @@ module CodeCommit
         pattern = '.+'
         loader = CodeCommit::Loader.new(COMMANDS,DEFAULT)
         puts loader.search(pattern).join("\n")
-      elsif argv.size == 2 # codecommit tab codecommit
+      elsif argv.size == 2 # awscc tab awscc
         loader = CodeCommit::Loader.new(COMMANDS,DEFAULT)
         puts loader.search(".+").join("\n")
-      elsif argv.size == 3 # codecommit tab codecommit pattern
+      elsif argv.size == 3 # awscc tab awscc pattern
         pattern = argv[2]
         if COMMANDS.map { |x| x.to_s }.include? pattern
           puts

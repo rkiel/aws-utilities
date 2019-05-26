@@ -12,7 +12,7 @@ module CodeCommit
     end
 
     def script_name
-      "codecommit"
+      "awscc"
     end
 
     def valid?

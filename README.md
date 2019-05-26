@@ -4,8 +4,8 @@ This is a collection of simple command-line scripts, bash aliases, and bash util
 
 The command-line scripts include:
 
-* [awssu](docs/AWSSU.md) - makes working with multiple AWS CLI profiles easier
-* [codecommit](docs/CODECOMMIT.md) - makes setup and configuration of AWS CodeCommit easier
+- [awssu](docs/AWSSU.md) - makes working with multiple AWS CLI profiles easier
+- [awscc](docs/CODECOMMIT.md) - makes setup and configuration of AWS CodeCommit easier
 
 The command-line scripts are written in Ruby 2.x using just the standard libraries and do not require any gems to be installed.
 For OS X users, these should just work out-of-box.
@@ -28,5 +28,5 @@ cd ~/GitHub/rkiel/aws-utilities
 
 ## Documention
 
-* [See awssu](docs/AWSSU.md)
-* [See codecommit](docs/CODECOMMIT.md)
+- [See awssu](docs/AWSSU.md)
+- [See awscc](docs/CODECOMMIT.md)

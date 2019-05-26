@@ -3,10 +3,16 @@ function get_awssu_commands()
   COMPREPLY=(`awssu tab ${COMP_LINE}`)
 }
 
-function get_codecommit_commands()
+function get_awscc_commands()
 {
-  COMPREPLY=(`codecommit tab ${COMP_LINE}`)
+  COMPREPLY=(`awscc tab ${COMP_LINE}`)
+}
+
+function get_awsgenerate_commands()
+{
+  COMPREPLY=(`awsgenerate tab ${COMP_LINE}`)
 }
 
 complete -F get_awssu_commands awssu
-complete -F get_codecommit_commands codecommit
+complete -F get_awscc_commands awscc
+complete -F get_awsgenerate_commands awsgenerate

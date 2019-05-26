@@ -22,10 +22,10 @@ module Generate
         pattern = '.+'
         loader = ::Generate::Loader.new(COMMANDS,DEFAULT)
         puts loader.search(pattern).join("\n")
-      elsif argv.size == 2 # codecommit tab codecommit
+      elsif argv.size == 2 # awsgenerate tab awsgenerate
         loader = ::Generate::Loader.new(COMMANDS,DEFAULT)
         puts loader.search(".+").join("\n")
-      elsif argv.size == 3 # codecommit tab codecommit pattern
+      elsif argv.size == 3 # awsgenerate tab awsgenerate pattern
         pattern = argv[2]
         if COMMANDS.map { |x| x.to_s }.include? pattern
           puts
