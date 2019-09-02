@@ -5,11 +5,11 @@ module SwitchUser
   class Add < SwitchUser::Base
 
     def valid?
-      argv.size == 6
+      argv.size > 5
     end
 
     def help
-      "#{script_name} add account user pathToCsvFile region format"
+      "#{script_name} add account user pathToCsvFile region format [passphrase [comment]]"
     end
 
     def execute
@@ -19,6 +19,8 @@ module SwitchUser
       path_to_csv_file = argv.shift
       region = argv.shift
       format = argv.shift
+      passphrase = argv.shift
+      comment = argv.shift
 
       begin
         base_dir = create_path account, user
@@ -51,8 +53,19 @@ module SwitchUser
         json_hash = create_json account, user, access_key_id, secret_access_key, region, format
         write_json file_name, json_hash
 
+        file_name = pki_name(account, user)
+        unless passphrase
+          print "PKI passphrase: "
+          passphrase = gets.chomp
+        end
+        unless comment
+          print "PKI comment: "
+          comment = gets.chomp
+        end
+        create_pki(file_name, passphrase, comment)
+
         log "Removing #{path_to_csv_file}"
-        File.delete path_to_csv_file
+#        File.delete path_to_csv_file
         puts
       rescue => e
         log e.message

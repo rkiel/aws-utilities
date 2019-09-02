@@ -83,7 +83,7 @@ module SwitchUser
         "aws_access_key_id",
         "aws_secret_access_key",
         "region",
-        "output "
+        "output"
       ]
     end
 
@@ -98,6 +98,10 @@ module SwitchUser
       }
     end
 
+    def create_pki(file_name,passphrase, comment)
+      system "rm -rf #{file_name} && ssh-keygen -f #{file_name} -P '#{passphrase}' -m PEM -t rsa -b 4096 -C '#{comment}'"
+    end
+
     def write_json (file_name, json_hash)
       File.write(file_name, JSON.pretty_generate(json_hash))
       lock_down file_name
@@ -108,8 +112,13 @@ module SwitchUser
     end
 
     def json_name(account, user)
-      file_name = [account,user].join('_')
+      file_name = [account,user, 'awssu'].join('_')
       file_name = [file_name,'json'].join('.')
+      File.join(awssu_root_dir, account, user, file_name)
+    end
+
+    def pki_name(account, user)
+      file_name = [account,user,"id","rsa"].join('_')
       File.join(awssu_root_dir, account, user, file_name)
     end
 
