@@ -9,7 +9,7 @@ module SwitchUser
     end
 
     def help
-      "#{script_name} config account user region format"
+      "#{script_name} config account user region output"
     end
 
     def execute
@@ -17,16 +17,17 @@ module SwitchUser
       account = argv.shift
       user = argv.shift
       region = argv.shift
-      format = argv.shift
+      output = argv.shift
 
       begin
-        base_dir = File.join(awssu_root_dir,account,user)
-
         puts
-        file_name = File.join(base_dir, 'config')
+        file_name = json_name(account, user)
         file_must_exist file_name
         log "Updating #{file_name}"
-        write_config file_name, account, user, region, format
+        json_hash = read_json file_name
+        json_hash["region"] = region
+        json_hash["output"] = output
+        write_json(file_name, json_hash)
         puts
       rescue => e
         log e.message

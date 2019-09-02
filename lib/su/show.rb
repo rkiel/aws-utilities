@@ -15,12 +15,9 @@ module SwitchUser
     def execute
 
       begin
-        ['credentials','config'].each do |name|
-          puts
-          file_name = File.join(aws_root_dir,name)
-          file_must_exist file_name
-          system "cat #{file_name}"
-        end
+        puts
+        json_hash = get_user()
+        puts JSON.pretty_generate json_hash
         puts
       rescue => e
         log e.message

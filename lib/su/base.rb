@@ -1,5 +1,6 @@
 require 'csv'
 require 'fileutils'
+require 'json'
 
 module SwitchUser
 
@@ -51,11 +52,6 @@ module SwitchUser
       File.chmod(0600,file_name)
     end
 
-    def copy src_file_name, dest_file_name
-      FileUtils.cp src_file_name, dest_file_name
-      File.chmod(0600, dest_file_name)
-    end
-
     def file_must_exist (file_name)
       raise "ERROR: #{file_name} does not exists" unless File.exist? file_name
     end
@@ -80,54 +76,41 @@ module SwitchUser
       base_dir
     end
 
-    def write_credentials (file_name, account, user, access_key_id, secret_access_key)
-      File.open(file_name, "w") do |f|
-        f.puts ";"
-        f.puts "; #{account} #{user} credentials"
-        f.puts ";"
-        f.puts "[default]"
-        f.puts "aws_access_key_id = #{access_key_id}"
-        f.puts "aws_secret_access_key = #{secret_access_key}"
-      end
+    def json_keys
+      [
+        "awssu_account",
+        "awssu_user",
+        "aws_access_key_id",
+        "aws_secret_access_key",
+        "region",
+        "output "
+      ]
+    end
+
+    def create_json (account, user, access_key_id, secret_access_key, region, format)
+      {
+        "awssu_account": account,
+        "awssu_user": user,
+        "aws_access_key_id": access_key_id,
+        "aws_secret_access_key": secret_access_key,
+        "region": region,
+        "output": format
+      }
+    end
+
+    def write_json (file_name, json_hash)
+      File.write(file_name, JSON.pretty_generate(json_hash))
       lock_down file_name
     end
 
-    def write_config (file_name, account, user, region, format)
-      File.open(file_name, "w") do |f|
-        f.puts ";"
-        f.puts "; #{account} #{user} config"
-        f.puts ";"
-        f.puts "[default]"
-        f.puts "region = #{region}"
-        f.puts "output = #{format}"
-      end
-      lock_down file_name
+    def read_json (file_name)
+      JSON.parse(File.read(file_name))
     end
 
-    def export_file (file_name, data)
-      file_not_must_exist file_name
-      log "Adding #{file_name}"
-      File.write(file_name, data.join("\n"))
-      lock_down file_name
-    end
-
-    def read_file (file_name)
-      contents = File.read(file_name)
-      lines = contents.split("\n")
-      lines = lines.map { |x| x.strip }
-      lines = lines.reject { |x| x.match(/^;/) }
-      lines = lines.map { |x| x.sub("[profile ","[") }
-      section = nil
-      data = {}
-      lines.each do |line|
-        if line.match(/\[.+\]/)
-          section = line
-          data[section] = []
-        else
-          data[section].push line
-        end
-      end
-      data
+    def json_name(account, user)
+      file_name = [account,user].join('_')
+      file_name = [file_name,'json'].join('.')
+      File.join(awssu_root_dir, account, user, file_name)
     end
 
     def list_directory (*path)
@@ -138,14 +121,30 @@ module SwitchUser
       end
     end
 
-    def switchUser (account, user)
-      ['credentials','config'].each do |name|
-        src_file_name = File.join(awssu_root_dir,account,user, name)
-        dest_file_name = File.join(aws_root_dir, name)
-        file_must_exist src_file_name
-        log "Replacing #{dest_file_name}"
-        copy src_file_name, dest_file_name
+    def switch_user (account, user)
+      file_name = json_name(account, user)
+      file_must_exist file_name
+      json_hash = read_json(file_name)
+      set_user(json_hash)
+    end
+
+    def set_user (json_hash)
+      json_keys.each do |key|
+          default_value = "SAFE_#{key.upcase}"
+          cmd = "aws configure set #{key} #{json_hash[key] || default_value}"
+          puts cmd
+          system cmd
       end
+    end
+
+    def get_user (profile = "default")
+      json_hash = {}
+      json_keys.each do |key|
+          cmd = "aws configure get #{key} --profile #{profile}"
+          puts cmd
+          json_hash[key] = `#{cmd}`.strip
+      end
+      json_hash
     end
 
     def search_for_users
@@ -160,8 +159,7 @@ module SwitchUser
       users.keys.each do |account|
         Dir.chdir(File.join(awssu_root_dir,account)) do
           Dir['*'].each do |user|
-            base_dir = File.join(awssu_root_dir,account,user)
-            users[account] << user if File.exist? File.join(base_dir,'credentials') and File.exist? File.join(base_dir,'config')
+            users[account] << user if File.exist? json_name(account,user)
           end
         end
       end
@@ -187,13 +185,7 @@ module SwitchUser
     end
 
     def safe_mode
-      ['credentials','config'].each do |name|
-        file_name = File.join(aws_root_dir, name)
-        if File.exist? file_name
-          log "Removing #{file_name}"
-          File.delete file_name
-        end
-      end
+      set_user({})
     end
 
   end

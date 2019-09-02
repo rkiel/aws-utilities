@@ -19,7 +19,7 @@ module SwitchUser
 
       begin
         puts
-        switchUser account, user
+        switch_user(account, user)
         puts
       rescue => e
         log e.message

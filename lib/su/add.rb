@@ -45,15 +45,11 @@ module SwitchUser
         end
 
         puts
-        file_name = File.join(base_dir, 'credentials')
+        file_name = json_name(account, user)
         file_not_must_exist file_name
         log "Adding #{file_name}"
-        write_credentials file_name, account, user, access_key_id, secret_access_key
-
-        file_name = File.join(base_dir, 'config')
-        file_not_must_exist file_name
-        log "Adding #{file_name}"
-        write_config file_name, account, user, region, format
+        json_hash = create_json account, user, access_key_id, secret_access_key, region, format
+        write_json file_name, json_hash
 
         log "Removing #{path_to_csv_file}"
         File.delete path_to_csv_file

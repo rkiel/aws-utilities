@@ -30,7 +30,7 @@ module SwitchUser
         if accounts.size == 0
           raise "#{swithToUser} not found"
         elsif accounts.size == 1
-          switchUser accounts.first, swithToUser
+          switch_user accounts.first, swithToUser
         else
           safe_mode
           puts

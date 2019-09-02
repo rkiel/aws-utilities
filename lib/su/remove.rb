@@ -18,13 +18,12 @@ module SwitchUser
       user = argv.shift
 
       begin
+
         puts
-        ['credentials','config'].each do |name|
-          file_name = File.join(awssu_root_dir,account,user,name)
-          file_must_exist file_name
-          log "Removing #{file_name}"
-          File.delete file_name
-        end
+        file_name = json_name(account,user)
+        file_must_exist file_name
+        log "Removing #{file_name}"
+        File.delete file_name
 
         purge_dir(awssu_root_dir, account, user)
         dirs = list_directory(awssu_root_dir, account)
