@@ -11,6 +11,7 @@ module SwitchUser
       :help,
       :list,
       :pick,
+      :pki,
       :remove,
       :safe,
       :show,

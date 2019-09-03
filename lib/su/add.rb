@@ -53,19 +53,8 @@ module SwitchUser
         json_hash = create_json account, user, access_key_id, secret_access_key, region, format
         write_json file_name, json_hash
 
-        file_name = pki_name(account, user)
-        unless passphrase
-          print "PKI passphrase: "
-          passphrase = gets.chomp
-        end
-        unless comment
-          print "PKI comment: "
-          comment = gets.chomp
-        end
-        create_pki(file_name, passphrase, comment)
-
         log "Removing #{path_to_csv_file}"
-#        File.delete path_to_csv_file
+        File.delete path_to_csv_file
         puts
       rescue => e
         log e.message

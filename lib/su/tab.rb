@@ -19,7 +19,7 @@ module SwitchUser
 
     def execute
       account_user_actions = ['config','remove','use']
-      account_actions = ['add']
+      account_actions = ['add','pki']
       user_actions = ['pick']
 
       if argv.size == 1

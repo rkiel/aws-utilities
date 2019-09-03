@@ -99,7 +99,14 @@ module SwitchUser
     end
 
     def create_pki(file_name,passphrase, comment)
-      system "rm -rf #{file_name} && ssh-keygen -f #{file_name} -P '#{passphrase}' -m PEM -t rsa -b 4096 -C '#{comment}'"
+      [
+        "ssh-keygen -f #{file_name} -P '#{passphrase.strip}' -m PEM -t rsa -b 4096 -C '#{comment.strip}' -q"
+      ].each do |cmd|
+        puts
+        puts cmd
+        system cmd
+      end
+      puts
     end
 
     def write_json (file_name, json_hash)
