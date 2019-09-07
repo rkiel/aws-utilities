@@ -1,5 +1,6 @@
 require_relative './base'
 require_relative './config_file'
+require_relative './ssh_config_file'
 require_relative './csv_file'
 
 module SwitchUser
@@ -37,10 +38,10 @@ module SwitchUser
         cf.set_output(format)
         cf.save
 
-        file_name = ssh_config_name(account, user)
-        file_not_must_exist file_name
-        log "Adding #{file_name}"
-        write_ssh_config(file_name, csv.access_key_id)
+        ssh = ::SwitchUser::SshConfigFile.new(account, user)
+        ssh.must_not_exist
+        ssh.access_key_id = csv.access_key_id
+        ssh.save
 
         csv.remove
         puts

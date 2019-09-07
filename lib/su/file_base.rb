@@ -43,11 +43,16 @@ module SwitchUser
       @awssu_root_dir ||= File.join(ENV['HOME'], '.awssu')
     end
 
+    def ssh_root_dir
+      File.join(ENV['HOME'], '.ssh')
+    end
+
     def lock_down (file_name)
       # do nothging by default
     end
 
     def file_name
+      "/unkown/file/name"
     end
 
     def get_file_contents
