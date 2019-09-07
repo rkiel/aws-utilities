@@ -51,7 +51,6 @@ module SwitchUser
     end
 
     def awssu_root_dir
-#      File.join(aws_root_dir,'awssu')
       @awssu_root_dir ||= File.join(ENV['HOME'], '.awssu')
     end
 
