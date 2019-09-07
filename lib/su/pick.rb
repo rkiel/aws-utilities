@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -14,36 +15,35 @@ module SwitchUser
 
     def execute
       action = argv.shift
-      swithToUser = argv.shift
+      switch_to_user = argv.shift
 
       begin
-        puts
         data = search_for_users
 
         accounts = []
         data.keys.each do |account|
           data[account].each do |user|
-            accounts << account if user == swithToUser
+            accounts << account if user == switch_to_user
           end
         end
 
         if accounts.size == 0
-          raise "#{swithToUser} not found"
+          raise "#{switch_to_user} not found"
         elsif accounts.size == 1
-          switch_user accounts.first, swithToUser
+          cf = ::SwitchUser::ConfigFile.new(accounts.first, switch_to_user)
+          cf.must_exist
+          cf.switch(false)
         else
-          safe_mode
-          puts
+          cf = ::SwitchUser::ConfigFile.new
+          cf.switch(true)
           accounts.sort.each do |account|
-            log "#{account} #{swithToUser}"
+            log "#{account} #{switch_to_user}"
           end
         end
-        puts
       rescue => e
         log e.message
-        puts
-        safe_mode
-        puts
+        cf = ::SwitchUser::ConfigFile.new
+        cf.switch(true)
       end
     end
   end
