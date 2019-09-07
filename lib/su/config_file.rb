@@ -41,6 +41,7 @@ module SwitchUser
       if File.exist? file_name
         @json_hash = JSON.parse(File.read(file_name))
       else
+        @json_hash = {}
         set_account account
         set_user  user
         set_pki false
