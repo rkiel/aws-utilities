@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -19,12 +20,10 @@ module SwitchUser
       profile = argv.shift
 
       begin
-        file_name = json_name(account, user)
-        file_not_must_exist file_name
-
-        json_hash = get_user(profile)
-        log "Adding #{file_name}"
-        write_json file_name, json_hash
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_not_exist
+        cf.export(profile)
+        cf.save
       rescue => e
         log e.message
       end

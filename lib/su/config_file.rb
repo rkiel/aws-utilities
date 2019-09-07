@@ -12,6 +12,15 @@ module SwitchUser
     attr_accessor :region
     attr_accessor :output
 
+    def export(profile)
+      set_file_contents nil
+      aws_configure_keys.each do |key|
+        cmd = "aws configure get #{key} --profile #{profile}"
+        puts cmd
+        send("#{key}=", `#{cmd}`.strip)
+      end
+    end
+
     private
 
     def file_name
@@ -24,36 +33,39 @@ module SwitchUser
     end
 
     def get_file_contents
-      json_hash = {
-        awssu_account: awssu_account,
-        awssu_user: awssu_user,
-        awssu_pki: awssu_pki,
-        awssu_codecommit: awssu_codecommit,
-        aws_access_key_id: aws_access_key_id,
-        aws_secret_access_key: aws_secret_access_key,
-        region: region,
-        output: output
-      }
+      json_hash = {}
+      all_configure_keys.each do |key|
+        json_hash[key] = send("#{key}")
+      end
       JSON.pretty_generate(json_hash)
     end
 
     def set_file_contents (contents)
       if contents
         json_hash = JSON.parse(contents)
-        @awssu_account = json_hash["awssu_account"]
-        @awssu_user = json_hash["awssu_user"]
-        @awssu_pki = json_hash["awssu_pki"]
-        @awssu_codecommit = json_hash["awssu_codecommit"]
-        @aws_access_key_id = json_hash["aws_access_key_id"]
-        @aws_secret_access_key = json_hash["aws_secret_access_key"]
-        @region = json_hash["region"]
-        @output = json_hash["output"]
       else
-        @awssu_account = account
-        @awssu_user =  user
-        @awssu_pki = false
-        @awssu_codecommit = false
+        json_hash = {
+          "awssu_account" =>  account,
+          "awssu_user" => user,
+          "awssu_pki" => false,
+          "awssu_codecommit" => false
+        }
       end
+      all_configure_keys.each do |key|
+        send("#{key}=", json_hash[key])
+      end
+    end
+
+    def aws_configure_keys
+      ["aws_access_key_id", "aws_secret_access_key", "region", "output"]
+    end
+
+    def awssu_configure_keys
+      ["awssu_account","awssu_user","awssu_pki","awssu_codecommit"]
+    end
+
+    def all_configure_keys
+      awssu_configure_keys + aws_configure_keys
     end
 
     def lock_down (file_name)
