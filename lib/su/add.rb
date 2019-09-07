@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -45,11 +46,13 @@ module SwitchUser
         end
 
         puts
-        file_name = json_name(account, user)
-        file_not_must_exist file_name
-        log "Adding #{file_name}"
-        json_hash = create_json account, user, access_key_id, secret_access_key, region, format
-        write_json file_name, json_hash
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_not_exist
+        cf.set_access_key(access_key_id)
+        cf.set_secret_access_key(secret_access_key)
+        cf.set_region(region)
+        cf.set_output(format)
+        cf.save
 
         file_name = ssh_config_name(account, user)
         file_not_must_exist file_name

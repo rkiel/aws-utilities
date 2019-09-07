@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -37,7 +38,11 @@ module SwitchUser
         end
         create_pki(file_name, passphrase, comment)
 
-        update_json(account, user, "awssu_pki", true)
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_exist
+        cf.set_pki(true)
+        cf.save
+
         puts
       rescue => e
         log e.message

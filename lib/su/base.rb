@@ -136,14 +136,6 @@ module SwitchUser
       JSON.parse(File.read(file_name))
     end
 
-    def update_json (account, user, key, value)
-      file_name = json_name(account, user)
-      file_must_exist file_name
-      json_hash = read_json(file_name)
-      json_hash[key] = value
-      write_json file_name, json_hash
-    end
-
     def ssh_config_name(account, user)
       #file_name = [account,user, 'ssh','config'].join('_')
       file_name = ['ssh','config'].join('_')
