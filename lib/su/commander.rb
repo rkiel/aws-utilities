@@ -37,7 +37,9 @@ module SwitchUser
     end
 
     def execute
+      puts
       subcommand.execute
+      puts
     end
 
   end

@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -20,15 +21,11 @@ module SwitchUser
       output = argv.shift
 
       begin
-        puts
-        file_name = json_name(account, user)
-        file_must_exist file_name
-        log "Updating #{file_name}"
-        json_hash = read_json file_name
-        json_hash["region"] = region
-        json_hash["output"] = output
-        write_json(file_name, json_hash)
-        puts
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_exist
+        cf.region = region
+        cf.output = format
+        cf.save
       rescue => e
         log e.message
       end

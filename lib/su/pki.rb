@@ -21,9 +21,6 @@ module SwitchUser
       comment = argv.shift
 
       begin
-        puts
-        create_path account, user
-
         file_name = pki_name(account, user)
         file_not_must_exist file_name
         file_not_must_exist "#{file_name}.pub"
@@ -42,8 +39,6 @@ module SwitchUser
         cf.must_exist
         cf.awssu_pki = true
         cf.save
-
-        puts
       rescue => e
         log e.message
       end

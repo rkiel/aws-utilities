@@ -24,8 +24,6 @@ module SwitchUser
       format = argv.shift
 
       begin
-        base_dir = create_path account, user
-
         csv = ::SwitchUser::CsvFile.new(path_to_csv_file)
         csv.must_exist
         csv.parse
@@ -44,7 +42,6 @@ module SwitchUser
         ssh.save
 
         csv.remove
-        puts
       rescue => e
         log e.message
       end

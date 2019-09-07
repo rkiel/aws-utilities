@@ -5,6 +5,9 @@ module SwitchUser
     def initialize(account, user)
       @account = account
       @user = user
+      mkdir(File.join(awssu_root_dir))
+      mkdir(File.join(awssu_root_dir,account))
+      mkdir(File.join(awssu_root_dir,account,user))
       load
     end
 
@@ -61,5 +64,12 @@ module SwitchUser
     def set_file_contents (contents)
     end
 
+    def mkdir (path)
+      unless Dir.exist? path
+        log "Creating #{path}"
+        FileUtils.mkdir_p(path)
+        File.chmod(0700, path)
+      end
+    end
   end
 end
