@@ -3,15 +3,28 @@ require_relative './file_base'
 module SwitchUser
   class SshConfigFile < ::SwitchUser::FileBase
 
-    attr_accessor :access_key_id
+    attr_accessor :access_key_id, :host
+
+    def set ( key , value )
+      @data[key] = value
+    end
 
   private
 
+    def set_file_contents(contents)
+      @host = "git-codecommit.*.amazonaws.com"
+      @data = {}
+    end
+
     def get_file_contents
+      set "User", access_key_id
+      set "IdentityFile",  "~/.ssh/codecommit"
+
       lines = []
-      lines << "Host git-codecommit.*.amazonaws.com"
-      lines << "  User #{access_key_id}"
-      lines << "  IdentityFile ~/.ssh/codecommit"
+      lines << "Host #{host}"
+      @data.each do |key, value|
+        lines << "  #{key} #{value}"
+      end
       lines.join("\n")
     end
 
