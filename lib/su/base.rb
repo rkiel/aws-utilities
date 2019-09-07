@@ -85,6 +85,8 @@ module SwitchUser
       [
         "awssu_account",
         "awssu_user",
+        "awssu_pki",
+        "awssu_codecommit",
         "aws_access_key_id",
         "aws_secret_access_key",
         "region",
@@ -96,6 +98,8 @@ module SwitchUser
       {
         "awssu_account": account,
         "awssu_user": user,
+        "awssu_pki": false,
+        "awssu_codecommit": false,
         "aws_access_key_id": access_key_id,
         "aws_secret_access_key": secret_access_key,
         "region": region,
@@ -130,6 +134,14 @@ module SwitchUser
 
     def read_json (file_name)
       JSON.parse(File.read(file_name))
+    end
+
+    def update_json (account, user, key, value)
+      file_name = json_name(account, user)
+      file_must_exist file_name
+      json_hash = read_json(file_name)
+      json_hash[key] = value
+      write_json file_name, json_hash
     end
 
     def ssh_config_name(account, user)

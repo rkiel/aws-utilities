@@ -36,6 +36,8 @@ module SwitchUser
           comment = gets.chomp
         end
         create_pki(file_name, passphrase, comment)
+
+        update_json(account, user, "awssu_pki", true)
         puts
       rescue => e
         log e.message
