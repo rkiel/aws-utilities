@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -18,14 +19,13 @@ module SwitchUser
       user = argv.shift
 
       begin
-        puts
-        switch_user(account, user)
-        puts
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_exist
+        cf.switch(false)
       rescue => e
         log e.message
-        puts
-        safe_mode
-        puts
+        cf = ::SwitchUser::ConfigFile.new
+        cf.switch(true)
       end
     end
   end

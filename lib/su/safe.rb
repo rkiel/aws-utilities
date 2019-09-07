@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -15,9 +16,8 @@ module SwitchUser
     def execute
 
       begin
-        puts
-        safe_mode
-        puts
+        cf = ::SwitchUser::ConfigFile.new
+        cf.switch(true)
       rescue => e
         log e.message
       end

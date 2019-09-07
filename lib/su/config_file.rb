@@ -21,6 +21,16 @@ module SwitchUser
       end
     end
 
+    def switch(safe_mode = true)
+      aws_configure_keys.each do |key|
+        default_value = "SAFE_#{key.upcase}"
+        value = safe_mode ? default_value : send("#{key}")
+        cmd = "aws configure set #{key} #{value}"
+        puts cmd
+        system cmd
+      end
+    end
+
     private
 
     def file_name

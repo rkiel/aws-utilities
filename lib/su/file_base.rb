@@ -2,13 +2,15 @@ module SwitchUser
   class FileBase
     attr_reader :account, :user
 
-    def initialize(account, user)
+    def initialize(account = nil, user = nil)
       @account = account
       @user = user
-      mkdir(File.join(awssu_root_dir))
-      mkdir(File.join(awssu_root_dir,account))
-      mkdir(File.join(awssu_root_dir,account,user))
-      load
+      if account and user
+        mkdir(File.join(awssu_root_dir))
+        mkdir(File.join(awssu_root_dir,account))
+        mkdir(File.join(awssu_root_dir,account,user))
+        load
+      end
     end
 
     def load
