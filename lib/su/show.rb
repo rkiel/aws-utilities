@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -15,10 +16,8 @@ module SwitchUser
     def execute
 
       begin
-        puts
-        json_hash = get_user()
-        puts JSON.pretty_generate json_hash
-        puts
+        cf = ::SwitchUser::ConfigFile.new
+        cf.show
       rescue => e
         log e.message
       end

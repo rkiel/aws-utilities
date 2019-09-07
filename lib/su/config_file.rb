@@ -21,8 +21,20 @@ module SwitchUser
       end
     end
 
+    def show
+      set_file_contents nil
+      profile = 'default'
+      json_hash = {}
+      all_configure_keys.each do |key|
+        cmd = "aws configure get #{key} --profile #{profile}"
+        puts cmd
+        json_hash[key] = `#{cmd}`.strip
+      end
+      puts JSON.pretty_generate(json_hash)
+    end
+
     def switch(safe_mode = true)
-      aws_configure_keys.each do |key|
+      all_configure_keys.each do |key|
         default_value = "SAFE_#{key.upcase}"
         value = safe_mode ? default_value : send("#{key}")
         cmd = "aws configure set #{key} #{value}"
