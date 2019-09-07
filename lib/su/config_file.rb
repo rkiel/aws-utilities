@@ -1,12 +1,9 @@
-module SwitchUser
-  class ConfigFile
-    attr_reader :account, :user, :json_hash
+require_relative './file_base'
 
-    def initialize(account, user)
-      @account = account
-      @user = user
-      load
-    end
+module SwitchUser
+  class ConfigFile < ::SwitchUser::FileBase
+
+    attr_reader :json_hash
 
     def set_access_key(access_key_id)
       json_hash["aws_access_key_id"] = access_key_id
@@ -37,42 +34,7 @@ module SwitchUser
       json_hash["awssu_codecommit"] = boolean
     end
 
-    def load
-      if File.exist? file_name
-        @json_hash = JSON.parse(File.read(file_name))
-      else
-        @json_hash = {}
-        set_account account
-        set_user  user
-        set_pki false
-        set_codecommit false
-      end
-    end
-
-    def save
-      log "Saving #{file_name}"
-      File.write(file_name, JSON.pretty_generate(json_hash))
-      lock_down file_name
-    end
-
-    def must_not_exist
-      raise "ERROR: #{file_name} already exists" if File.exist? file_name
-    end
-
-    def must_exist
-      raise "ERROR: #{file_name} does not exists" unless File.exist? file_name
-    end
-
     private
-
-    def log (msg)
-      puts msg.gsub(Regexp.new(ENV['HOME']), '~')
-    end
-
-    def awssu_root_dir
-#      File.join(aws_root_dir,'awssu')
-      @awssu_root_dir ||= File.join(ENV['HOME'], '.awssu')
-    end
 
     def file_name
       @file_name ||= begin
@@ -80,6 +42,22 @@ module SwitchUser
         name = 'configure'
         name = [name,'json'].join('.')
         File.join(awssu_root_dir, account, user, name)
+      end
+    end
+
+    def get_file_contents
+      JSON.pretty_generate(json_hash)
+    end
+
+    def set_file_contents (contents)
+      if contents
+        @json_hash = JSON.parse(contents)
+      else
+        @json_hash = {}
+        set_account account
+        set_user  user
+        set_pki false
+        set_codecommit false
       end
     end
 
