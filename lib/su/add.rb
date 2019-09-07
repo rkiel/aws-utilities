@@ -32,10 +32,10 @@ module SwitchUser
 
         cf = ::SwitchUser::ConfigFile.new(account, user)
         cf.must_not_exist
-        cf.set_access_key(csv.access_key_id)
-        cf.set_secret_access_key(csv.secret_access_key)
-        cf.set_region(region)
-        cf.set_output(format)
+        cf.aws_access_key_id = csv.access_key_id
+        cf.aws_secret_access_key = csv.secret_access_key
+        cf.region = region
+        cf.output = format
         cf.save
 
         ssh = ::SwitchUser::SshConfigFile.new(account, user)

@@ -40,7 +40,7 @@ module SwitchUser
 
         cf = ::SwitchUser::ConfigFile.new(account, user)
         cf.must_exist
-        cf.set_pki(true)
+        cf.awssu_pki = true
         cf.save
 
         puts
