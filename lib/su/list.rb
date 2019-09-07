@@ -15,7 +15,6 @@ module SwitchUser
     def execute
 
       begin
-        puts
         data = search_for_users
 
         data.keys.sort.each do |account|
@@ -23,7 +22,6 @@ module SwitchUser
             log "#{account} #{user}"
           end
         end
-        puts
       rescue => e
         log e.message
       end

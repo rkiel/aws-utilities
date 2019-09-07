@@ -27,6 +27,13 @@ module SwitchUser
       lock_down file_name
     end
 
+    def remove
+      if File.exist? file_name
+        log "Removing #{file_name}"
+        File.delete file_name
+      end
+    end
+
     def must_not_exist
       raise "ERROR: #{file_name} already exists" if File.exist? file_name
     end

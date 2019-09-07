@@ -1,4 +1,8 @@
 require_relative './base'
+require_relative './config_file'
+require_relative './ssh_config_file'
+require_relative './pki_public_file'
+require_relative './pki_private_file'
 
 module SwitchUser
 
@@ -18,18 +22,17 @@ module SwitchUser
       user = argv.shift
 
       begin
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.remove
 
-        puts
-        file_name = json_name(account,user)
-        file_must_exist file_name
-        log "Removing #{file_name}"
-        File.delete file_name
+        ssh = ::SwitchUser::SshConfigFile.new(account, user)
+        ssh.remove
 
-        purge_dir(awssu_root_dir, account, user)
-        dirs = list_directory(awssu_root_dir, account)
-        purge_dir(awssu_root_dir, account) if dirs.empty?
+        pki_public = ::SwitchUser::PkiPublicFile.new(account, user)
+        pki_public.remove
 
-        puts
+        pki_private = ::SwitchUser::PkiPrivateFile.new(account, user)
+        pki_private.remove
       rescue => e
         log e.message
       end

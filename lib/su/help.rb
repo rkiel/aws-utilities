@@ -18,12 +18,10 @@ module SwitchUser
     end
 
     def execute
-      puts
       loader = SwitchUser::Loader.new(COMMANDS,DEFAULT)
       loader.create_all(argv).each do |cmd|
         puts cmd.help
       end
-      puts
     end
   end
 

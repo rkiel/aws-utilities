@@ -1,5 +1,7 @@
 require_relative './base'
 require_relative './config_file'
+require_relative './pki_public_file'
+require_relative './pki_private_file'
 
 module SwitchUser
 
@@ -21,19 +23,12 @@ module SwitchUser
       comment = argv.shift
 
       begin
-        file_name = pki_name(account, user)
-        file_not_must_exist file_name
-        file_not_must_exist "#{file_name}.pub"
+        pki_public = ::SwitchUser::PkiPublicFile.new(account, user)
+        pki_public.must_not_exist
 
-        unless passphrase
-          print "PKI passphrase: "
-          passphrase = gets.chomp
-        end
-        unless comment
-          print "PKI comment: "
-          comment = gets.chomp
-        end
-        create_pki(file_name, passphrase, comment)
+        pki_private = ::SwitchUser::PkiPrivateFile.new(account, user)
+        pki_private.must_not_exist
+        pki_private.generate(passphrase, comment)
 
         cf = ::SwitchUser::ConfigFile.new(account, user)
         cf.must_exist
