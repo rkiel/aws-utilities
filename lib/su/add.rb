@@ -5,11 +5,11 @@ module SwitchUser
   class Add < SwitchUser::Base
 
     def valid?
-      argv.size > 5
+      argv.size == 6
     end
 
     def help
-      "#{script_name} add account user pathToCsvFile region format [passphrase [comment]]"
+      "#{script_name} add account user pathToCsvFile region format"
     end
 
     def execute
@@ -19,8 +19,6 @@ module SwitchUser
       path_to_csv_file = argv.shift
       region = argv.shift
       format = argv.shift
-      passphrase = argv.shift
-      comment = argv.shift
 
       begin
         base_dir = create_path account, user
@@ -53,8 +51,14 @@ module SwitchUser
         json_hash = create_json account, user, access_key_id, secret_access_key, region, format
         write_json file_name, json_hash
 
+        file_name = ssh_config_name(account, user)
+        file_not_must_exist file_name
+        log "Adding #{file_name}"
+        write_ssh_config(file_name, access_key_id)
+
         log "Removing #{path_to_csv_file}"
         File.delete path_to_csv_file
+        # log "SKIPPING **** Removing #{path_to_csv_file}"
         puts
       rescue => e
         log e.message

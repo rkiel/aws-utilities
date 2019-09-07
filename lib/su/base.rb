@@ -40,7 +40,12 @@ module SwitchUser
     end
 
     def awssu_root_dir
-      File.join(aws_root_dir,'awssu')
+#      File.join(aws_root_dir,'awssu')
+      File.join(ENV['HOME'], '.awssu')
+    end
+
+    def ssh_root_dir
+      File.join(ENV['HOME'], '.ssh')
     end
 
     def mkdir (path)
@@ -109,6 +114,15 @@ module SwitchUser
       puts
     end
 
+    def write_ssh_config (file_name, access_key_id)
+      lines = []
+      lines << "Host git-codecommit.*.amazonaws.com"
+      lines << "  User #{access_key_id}"
+      lines << "  IdentityFile #{ssh_root_dir}/codecommit"
+      File.write(file_name, lines.join("\n"))
+      lock_down file_name
+    end
+
     def write_json (file_name, json_hash)
       File.write(file_name, JSON.pretty_generate(json_hash))
       lock_down file_name
@@ -118,14 +132,23 @@ module SwitchUser
       JSON.parse(File.read(file_name))
     end
 
+    def ssh_config_name(account, user)
+      #file_name = [account,user, 'ssh','config'].join('_')
+      file_name = ['ssh','config'].join('_')
+      file_name = [file_name,'txt'].join('.')
+      File.join(awssu_root_dir, account, user, file_name)
+    end
+
     def json_name(account, user)
-      file_name = [account,user, 'awssu'].join('_')
+      #file_name = [account,user, 'awssu'].join('_')
+      file_name = 'configure'
       file_name = [file_name,'json'].join('.')
       File.join(awssu_root_dir, account, user, file_name)
     end
 
     def pki_name(account, user)
-      file_name = [account,user,"id","rsa"].join('_')
+      #file_name = [account,user,"id","rsa"].join('_')
+      file_name = ["codecommit"].join('-')
       File.join(awssu_root_dir, account, user, file_name)
     end
 
