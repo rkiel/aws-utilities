@@ -9,6 +9,12 @@ module SwitchUser
       @data[key] = value
     end
 
+    def export
+      if File.exist?(ssh_config_file_name) and not File.exist?(ssh_config_keep_file_name)
+        copy(ssh_config_file_name, ssh_config_keep_file_name)
+      end
+    end
+
   private
 
     def set_file_contents(contents)
@@ -35,6 +41,18 @@ module SwitchUser
         name = [name,'txt'].join('.')
         File.join(awssu_root_dir, account, user, name)
       end
+    end
+
+    def ssh_config_file_name
+      File.join(ssh_root_dir, 'config')
+    end
+
+    def ssh_config_keep_file_name
+      File.join(ssh_root_dir, 'config.keep.txt')
+    end
+
+    def lock_down (file_name)
+      File.chmod(0600,file_name)
     end
   end
 end

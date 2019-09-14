@@ -1,5 +1,6 @@
 require_relative './base'
 require_relative './config_file'
+require_relative './ssh_config_file'
 
 module SwitchUser
 
@@ -24,6 +25,9 @@ module SwitchUser
         cf.must_not_exist
         cf.export(profile)
         cf.save
+
+        cf = ::SwitchUser::SshConfigFile.new(account, user)
+        cf.export
       rescue => e
         log e.message
       end

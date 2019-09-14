@@ -79,5 +79,11 @@ module SwitchUser
         File.chmod(0700, path)
       end
     end
+
+    def copy (src_path, dest_path)
+      log "Copying to #{dest_path}"
+      FileUtils.copy(src_path, dest_path)
+      lock_down dest_path
+    end
   end
 end
