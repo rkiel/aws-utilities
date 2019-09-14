@@ -1,5 +1,5 @@
 require_relative './base'
-require_relative './config_file'
+require_relative './safe'
 
 module SwitchUser
 
@@ -30,20 +30,16 @@ module SwitchUser
         if accounts.size == 0
           raise "#{switch_to_user} not found"
         elsif accounts.size == 1
-          cf = ::SwitchUser::ConfigFile.new(accounts.first, switch_to_user)
-          cf.must_exist
-          cf.switch(false)
+          ::SwitchUser::Safe.switch(false, accounts.first, switch_to_user)
         else
-          cf = ::SwitchUser::ConfigFile.new
-          cf.switch(true)
           accounts.sort.each do |account|
             log "#{account} #{switch_to_user}"
           end
+          ::SwitchUser::Safe.switch(true)
         end
       rescue => e
         log e.message
-        cf = ::SwitchUser::ConfigFile.new
-        cf.switch(true)
+        ::SwitchUser::Safe.switch(true)
       end
     end
   end

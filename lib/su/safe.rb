@@ -1,5 +1,6 @@
 require_relative './base'
 require_relative './config_file'
+require_relative './ssh_config_file'
 
 module SwitchUser
 
@@ -14,12 +15,25 @@ module SwitchUser
     end
 
     def execute
-
       begin
-        cf = ::SwitchUser::ConfigFile.new
-        cf.switch(true)
+        ::SwitchUser::Safe.switch(true)
       rescue => e
         log e.message
+      end
+    end
+
+    def self.switch (safe_mode, account = nil, user = nil)
+      if safe_mode
+        cf = ::SwitchUser::ConfigFile.new
+        cf.switch(true)
+        cf = ::SwitchUser::SshConfigFile.new
+        cf.switch(true)
+      else
+        cf = ::SwitchUser::ConfigFile.new(account, user)
+        cf.must_exist
+        cf.switch(false)
+        cf = ::SwitchUser::SshConfigFile.new(account, user)
+        cf.switch(false)
       end
     end
   end

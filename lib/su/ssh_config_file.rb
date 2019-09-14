@@ -15,6 +15,30 @@ module SwitchUser
       end
     end
 
+    def switch(safe_mode = true)
+      if safe_mode
+        if File.exist?(ssh_config_keep_file_name)
+          copy(ssh_config_keep_file_name, ssh_config_file_name)
+        elsif File.exist?(ssh_config_file_name)
+          File.delete ssh_config_file_name
+        end
+      else
+        if File.exist?(file_name)
+          if File.exist?(ssh_config_keep_file_name)
+            copy(file_name, ssh_config_file_name)
+            system "echo >> #{ssh_config_file_name}"
+            system "cat #{ssh_config_keep_file_name} >> #{ssh_config_file_name}"
+            system "echo >> #{ssh_config_file_name}"
+            lock_down ssh_config_file_name
+          else
+            copy(file_name, ssh_config_file_name)
+          end
+        elsif File.exist?(ssh_config_keep_file_name)
+          copy(ssh_config_keep_file_name, ssh_config_file_name)
+        end
+      end
+    end
+
   private
 
     def set_file_contents(contents)
@@ -53,6 +77,12 @@ module SwitchUser
 
     def lock_down (file_name)
       File.chmod(0600,file_name)
+    end
+
+    def copy (src_path, dest_path)
+      log "Copying to #{dest_path}"
+      FileUtils.copy(src_path, dest_path)
+      lock_down dest_path
     end
   end
 end
