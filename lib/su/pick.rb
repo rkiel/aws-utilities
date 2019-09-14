@@ -18,12 +18,12 @@ module SwitchUser
       switch_to_user = argv.shift
 
       begin
-        data = search_for_users
+        data = ::SwitchUser::ConfigFile.new.search
 
         accounts = []
         data.keys.each do |account|
           data[account].each do |user|
-            accounts << account if user == switch_to_user
+            accounts << account if user.awssu_user == switch_to_user
           end
         end
 

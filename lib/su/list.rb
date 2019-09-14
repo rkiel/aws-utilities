@@ -1,4 +1,5 @@
 require_relative './base'
+require_relative './config_file'
 
 module SwitchUser
 
@@ -15,11 +16,11 @@ module SwitchUser
     def execute
 
       begin
-        data = search_for_users
+        data = ::SwitchUser::ConfigFile.new.search
 
         data.keys.sort.each do |account|
           data[account].sort.each do |user|
-            log "#{account} #{user}"
+            log "#{user.awssu_account} #{user.awssu_user}"
           end
         end
       rescue => e

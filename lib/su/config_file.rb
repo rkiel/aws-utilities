@@ -43,6 +43,31 @@ module SwitchUser
       end
     end
 
+    def search
+      users = Hash.new
+
+      Dir.chdir(awssu_root_dir) do
+        Dir['*'].each do |account|
+          users[account] = []
+        end
+      end
+
+      users.keys.each do |account|
+        Dir.chdir(File.join(awssu_root_dir,account)) do
+          Dir['*'].each do |user|
+            begin
+              cf = ::SwitchUser::ConfigFile.new(account, user)
+              cf.must_exist
+              users[account] << cf
+            rescue => e
+            end
+          end
+        end
+      end
+
+      users
+    end
+
     private
 
     def file_name

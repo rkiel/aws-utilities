@@ -15,7 +15,7 @@ module SwitchUser
 
     def load
       if File.exist? file_name
-        log "Loading #{file_name}"
+#        log "Loading #{file_name}"
         contents = File.read(file_name)
       else
         contents = nil
