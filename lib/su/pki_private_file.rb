@@ -36,7 +36,7 @@ module SwitchUser
 
     def file_name
       @file_name ||= begin
-        name = 'codecommit'
+        name = 'codecommit_id_rsa'
         File.join(awssu_root_dir, account, user, name)
       end
     end

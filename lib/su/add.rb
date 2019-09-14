@@ -12,7 +12,7 @@ module SwitchUser
     end
 
     def help
-      "#{script_name} add account user pathToCsvFile region format"
+      "#{script_name} add account user pathToCsvFile region output"
     end
 
     def execute
@@ -21,7 +21,7 @@ module SwitchUser
       user = argv.shift
       path_to_csv_file = argv.shift
       region = argv.shift
-      format = argv.shift
+      output = argv.shift
 
       begin
         csv = ::SwitchUser::CsvFile.new(path_to_csv_file)
@@ -33,7 +33,7 @@ module SwitchUser
         cf.aws_access_key_id = csv.access_key_id
         cf.aws_secret_access_key = csv.secret_access_key
         cf.region = region
-        cf.output = format
+        cf.output = output
         cf.save
 
         ssh = ::SwitchUser::SshConfigFile.new(account, user)

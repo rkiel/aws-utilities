@@ -18,7 +18,7 @@ module SwitchUser
 
     def get_file_contents
       set "User", access_key_id
-      set "IdentityFile",  "~/.ssh/codecommit"
+      set "IdentityFile",  "~/.ssh/codecommit_id_rsa"
 
       lines = []
       lines << "Host #{host}"
