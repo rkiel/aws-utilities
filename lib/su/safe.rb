@@ -1,6 +1,8 @@
 require_relative './base'
 require_relative './config_file'
 require_relative './ssh_config_file'
+require_relative './pki_public_file'
+require_relative './pki_private_file'
 
 module SwitchUser
 
@@ -28,11 +30,19 @@ module SwitchUser
         cf.switch(true)
         cf = ::SwitchUser::SshConfigFile.new
         cf.switch(true)
+        cf = ::SwitchUser::PkiPublicFile.new
+        cf.switch(true)
+        cf = ::SwitchUser::PkiPrivateFile.new
+        cf.switch(true)
       else
         cf = ::SwitchUser::ConfigFile.new(account, user)
         cf.must_exist
         cf.switch(false)
         cf = ::SwitchUser::SshConfigFile.new(account, user)
+        cf.switch(false)
+        cf = ::SwitchUser::PkiPublicFile.new
+        cf.switch(false)
+        cf = ::SwitchUser::PkiPrivateFile.new
         cf.switch(false)
       end
     end

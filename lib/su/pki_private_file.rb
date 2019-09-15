@@ -1,19 +1,17 @@
-require_relative './file_base'
+require_relative './pki_public_file'
 
 module SwitchUser
-  class PkiPrivateFile < ::SwitchUser::FileBase
-
-    def load
-    end
-
-    def save
-    end
+  class PkiPrivateFile < ::SwitchUser::PkiPublicFile
 
     def generate(passphrase, comment)
       create_pki(prompt("PKI passphrase: ",passphrase), prompt("PKI comment: ",comment))
     end
 
     private
+
+    def full_id_rsa
+      id_rsa
+    end
 
     def prompt(msg, value)
       if value
@@ -31,13 +29,6 @@ module SwitchUser
         puts
         puts cmd
         system cmd
-      end
-    end
-
-    def file_name
-      @file_name ||= begin
-        name = 'codecommit_id_rsa'
-        File.join(awssu_root_dir, account, user, name)
       end
     end
 
