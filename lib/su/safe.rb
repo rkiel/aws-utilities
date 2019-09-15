@@ -40,9 +40,9 @@ module SwitchUser
         cf.switch(false)
         cf = ::SwitchUser::SshConfigFile.new(account, user)
         cf.switch(false)
-        cf = ::SwitchUser::PkiPublicFile.new
+        cf = ::SwitchUser::PkiPublicFile.new(account, user)
         cf.switch(false)
-        cf = ::SwitchUser::PkiPrivateFile.new
+        cf = ::SwitchUser::PkiPrivateFile.new(account, user)
         cf.switch(false)
       end
     end
