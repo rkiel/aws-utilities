@@ -1,5 +1,6 @@
 require_relative './base'
 require_relative './safe'
+require_relative './ssh_config_file'
 
 module SwitchUser
 
@@ -19,6 +20,8 @@ module SwitchUser
       user = argv.shift
 
       begin
+        cf = ::SwitchUser::SshConfigFile.new(account, user)
+        cf.export
         ::SwitchUser::Safe.switch(false, account, user)
       rescue => e
         log e.message
