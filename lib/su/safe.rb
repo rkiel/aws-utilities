@@ -38,18 +38,16 @@ module SwitchUser
         cf = ::SwitchUser::ConfigFile.new(account, user)
         cf.must_exist
         cf.switch(false)
-        cf = ::SwitchUser::SshConfigFile.new(account, user)
-        cf.switch(false)
         cf = ::SwitchUser::PkiPublicFile.new(account, user)
         cf.switch(false)
         cf = ::SwitchUser::PkiPrivateFile.new(account, user)
         cf.switch(false)
-        cf.something
-        # ssh = ::SwitchUser::SshConfigFile.new(account, user)
-        # ssh.must_not_exist
-        # ssh.access_key_id = csv.access_key_id
-        # ssh.save
-
+        ssh_key_id = cf.something
+        cf = ::SwitchUser::SshConfigFile.new(account, user)
+        cf.must_not_exist
+        cf.access_key_id = ssh_key_id
+        cf.save
+        cf.switch(false)
       end
     end
   end

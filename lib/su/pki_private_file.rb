@@ -15,8 +15,7 @@ module SwitchUser
       output = `#{cmd}`
       puts output
       json = JSON.parse(output)
-      ssh_key_id = json["SSHPublicKey"]["SSHPublicKeyId"]
-      puts ssh_key_id
+      json["SSHPublicKey"]["SSHPublicKeyId"]
     end
 
     private
