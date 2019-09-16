@@ -4,7 +4,15 @@ module SwitchUser
   class PkiPrivateFile < ::SwitchUser::PkiPublicFile
 
     def generate(passphrase, comment)
-      create_pki(prompt("PKI passphrase: ",passphrase), prompt("PKI comment: ",comment))
+      passphrase = prompt("PKI passphrase: ",passphrase)
+      comment = prompt("PKI comment: ",comment)
+      create_pki(passphrase), comment)
+    end
+
+    def something
+      output = `aws iam upload-ssh-public-key --user-name #{user} --ssh-public-key-body "$(cat #{ssh_file_name}.pub)"`
+      json = JSON.parse(json)
+      puts json
     end
 
     private
@@ -13,7 +21,7 @@ module SwitchUser
       id_rsa
     end
 
-    def prompt(msg, value)
+    def prompt(msg, value = nil)
       if value
         value
       else

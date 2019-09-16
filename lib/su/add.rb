@@ -1,6 +1,5 @@
 require_relative './base'
 require_relative './config_file'
-require_relative './ssh_config_file'
 require_relative './csv_file'
 
 module SwitchUser
@@ -35,11 +34,6 @@ module SwitchUser
         cf.region = region
         cf.output = output
         cf.save
-
-        ssh = ::SwitchUser::SshConfigFile.new(account, user)
-        ssh.must_not_exist
-        ssh.access_key_id = csv.access_key_id
-        ssh.save
 
         csv.remove
       rescue => e

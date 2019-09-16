@@ -44,6 +44,12 @@ module SwitchUser
         cf.switch(false)
         cf = ::SwitchUser::PkiPrivateFile.new(account, user)
         cf.switch(false)
+        cf.something
+        # ssh = ::SwitchUser::SshConfigFile.new(account, user)
+        # ssh.must_not_exist
+        # ssh.access_key_id = csv.access_key_id
+        # ssh.save
+
       end
     end
   end
