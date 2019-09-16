@@ -6,7 +6,7 @@ module SwitchUser
     def generate(passphrase, comment)
       passphrase = prompt("PKI passphrase: ",passphrase)
       comment = prompt("PKI comment: ",comment)
-      create_pki(passphrase), comment)
+      create_pki(passphrase, comment)
     end
 
     def something
