@@ -11,9 +11,7 @@ module SwitchUser
 
     def something
       cmd = "aws iam upload-ssh-public-key --user-name #{user} --ssh-public-key-body \"$(cat #{file_name}.pub)\""
-      puts cmd
       output = `#{cmd}`
-      puts output
       json = JSON.parse(output)
       json["SSHPublicKey"]["SSHPublicKeyId"]
     end
