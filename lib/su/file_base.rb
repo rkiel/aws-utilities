@@ -13,6 +13,12 @@ module SwitchUser
       end
     end
 
+    def <=> (right)
+      left = self
+      result = (left.account <=> right.account)
+      result == 0 ? (left.user <=> right.user) : result
+    end
+
     def load
       if File.exist? file_name
 #        log "Loading #{file_name}"
