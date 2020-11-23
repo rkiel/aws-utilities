@@ -1,3 +1,6 @@
+AWS_UTILITIES_BIN=~/GitHub/rkiel/aws-utilities/bin
+export PATH=${AWS_UTILITIES_BIN}:$PATH
+
 function get_awssu_commands()
 {
   COMPREPLY=(`awssu tab ${COMP_LINE}`)

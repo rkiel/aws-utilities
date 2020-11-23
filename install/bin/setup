@@ -1,10 +1,10 @@
 REPO="~/GitHub/rkiel/aws-utilities"
 
 if [ "$1" == "zsh" ] ; then
-  FILE=~/.zprofile
-  echo                                          >> $FILE
-  echo "AWS_UTILITIES_BIN=${REPO}/bin"          >> $FILE
-  echo "export PATH=${AWS_UTILITIES_BIN}:$PATH" >> $FILE
+  # FILE=~/.zprofile
+  # echo                                          >> $FILE
+  # echo "AWS_UTILITIES_BIN=${REPO}/bin"          >> $FILE
+  # echo "export PATH=${AWS_UTILITIES_BIN}:$PATH" >> $FILE
 
   FILE=~/.zshrc
   echo                                 >> $FILE
