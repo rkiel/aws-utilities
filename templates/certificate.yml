@@ -19,3 +19,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref Name
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
