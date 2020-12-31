@@ -103,3 +103,15 @@ Resources:
         ViewerCertificate:
           AcmCertificateArn: !Ref PublicCertificate
           SslSupportMethod: "sni-only"
+  ContentRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName:
+          Fn::GetAtt: [ContentDistribution, DomainName]
+        EvaluateTargetHealth: false
+        HostedZoneId: Z2FDTNDATAQYW2
+      HostedZoneId: !Ref HostedZone
+      Name:
+        Fn::Join: [".", ["www", !Ref DomainName]]
+      Type: "A"
