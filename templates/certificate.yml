@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  DomainName:
+    Type: String
+    Description: Enter domain name w/o www
+  Name:
+    Type: String
+    Description: Enter a one-word description of this domain
+
+Resources:
+  PublicCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Join [".", ["*", !Ref DomainName]]
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: !Ref Name
