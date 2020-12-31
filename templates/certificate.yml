@@ -23,3 +23,82 @@ Resources:
     Type: AWS::Route53::HostedZone
     Properties:
       Name: !Ref DomainName
+  OAI:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Ref DomainName
+  ContentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join [".", ["www", !Ref DomainName]]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  RedirectBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DomainName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  ContentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ContentBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "s3:GetObject"
+            Sid: AllowGetByOai
+            Effect: Allow
+            Resource: !Join
+              - ""
+              - - "arn:aws:s3:::"
+                - !Ref ContentBucket
+                - /*
+            Principal:
+              CanonicalUser:
+                Fn::GetAtt: [OAI, S3CanonicalUserId]
+  ContentDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - Fn::Join: [".", ["www", !Ref DomainName]]
+        Comment: !Ref ContentBucket
+        # CustomErrorResponses:
+        #   - CustomErrorResponse
+        #        DefaultCacheBehavior: DefaultCacheBehavior
+        DefaultCacheBehavior:
+          AllowedMethods: ["GET", "HEAD"]
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: "none"
+          TargetOriginId:
+            Fn::Join: [".", ["S3-www", !Ref DomainName]]
+          ViewerProtocolPolicy: "redirect-to-https"
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - DomainName:
+              Fn::GetAtt: [ContentBucket, DomainName]
+            Id:
+              Fn::Join: [".", ["S3-www", !Ref DomainName]]
+            OriginShield:
+              Enabled: false
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  ["/", ["origin-access-identity", "cloudfront", !Ref OAI]]
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: !Ref PublicCertificate
+          SslSupportMethod: "sni-only"
