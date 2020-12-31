@@ -84,6 +84,7 @@ Resources:
           TargetOriginId:
             Fn::Join: [".", ["S3-www", !Ref DomainName]]
           ViewerProtocolPolicy: "redirect-to-https"
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
         DefaultRootObject: index.html
         Enabled: true
         HttpVersion: http2
