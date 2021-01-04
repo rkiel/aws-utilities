@@ -172,7 +172,7 @@ Resources:
             CustomOriginConfig:
               HTTPPort: 80
               HTTPSPort: 443
-              OriginProtocolPolicy: https-only
+              OriginProtocolPolicy: http-only
         PriceClass: PriceClass_100
         ViewerCertificate:
           AcmCertificateArn: !Ref PublicCertificate
@@ -188,4 +188,15 @@ Resources:
       HostedZoneId: !Ref HostedZone
       Name:
         Fn::Join: [".", ["www", !Ref DomainName]]
+      Type: "A"
+  RedirectRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName:
+          Fn::GetAtt: [RedirectDistribution, DomainName]
+        EvaluateTargetHealth: false
+        HostedZoneId: Z2FDTNDATAQYW2
+      HostedZoneId: !Ref HostedZone
+      Name: !Ref DomainName
       Type: "A"
