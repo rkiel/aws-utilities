@@ -107,6 +107,76 @@ Resources:
         ViewerCertificate:
           AcmCertificateArn: !Ref PublicCertificate
           SslSupportMethod: "sni-only"
+  RedirectDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+        Comment: !Ref RedirectBucket
+        DefaultCacheBehavior:
+          AllowedMethods: ["GET", "HEAD"]
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: "none"
+          TargetOriginId:
+            Fn::Join:
+              [
+                "-",
+                [
+                  "S3",
+                  "Website",
+                  !Ref DomainName,
+                  "s3",
+                  "website",
+                  !Ref AWS::Region,
+                  ".amazonaws.com",
+                ],
+              ]
+          ViewerProtocolPolicy: "redirect-to-https"
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - DomainName:
+              Fn::Join:
+                [
+                  "-",
+                  [
+                    !Ref DomainName,
+                    "s3",
+                    "website",
+                    !Ref AWS::Region,
+                    ".amazonaws.com",
+                  ],
+                ]
+            Id:
+              Fn::Join:
+                [
+                  "-",
+                  [
+                    "S3",
+                    "Website",
+                    !Ref DomainName,
+                    "s3",
+                    "website",
+                    !Ref AWS::Region,
+                    ".amazonaws.com",
+                  ],
+                ]
+            OriginShield:
+              Enabled: false
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: !Ref PublicCertificate
+          SslSupportMethod: "sni-only"
   ContentRecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
