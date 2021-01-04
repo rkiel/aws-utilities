@@ -4,9 +4,9 @@ Parameters:
   DomainName:
     Type: String
     Description: Enter domain name w/o www
-  Name:
+  TagName:
     Type: String
-    Description: Enter a one-word description of this domain
+    Description: Enter a one-word tag description of this domain
 
 Resources:
   PublicCertificate:
@@ -18,7 +18,7 @@ Resources:
       ValidationMethod: DNS
       Tags:
         - Key: Name
-          Value: !Ref Name
+          Value: !Ref TagName
   HostedZone:
     Type: AWS::Route53::HostedZone
     Properties:
@@ -46,6 +46,10 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      WebsiteConfiguration:
+        RedirectAllRequestsTo:
+          HostName: !Join [".", ["www", !Ref DomainName]]
+          Protocol: "https"
   ContentBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
