@@ -7,15 +7,17 @@ if [ "$1" == "zsh" ] ; then
   # echo "export PATH=${AWS_UTILITIES_BIN}:$PATH" >> $FILE
 
   FILE=~/.zshrc
-  echo                                 >> $FILE
-  echo "source ${REPO}/dotfiles/zshrc" >> $FILE
+  echo                                          >> $FILE
+  echo "AWS_UTILITIES=${REPO}"                  >> $FILE
+  echo 'source ${AWS_UTILITIES}/dotfiles/zshrc' >> $FILE
 else
   FILE=~/.bash_profile
   echo                                          >> $FILE
-  echo "AWS_UTILITIES_BIN=${REPO}/bin"          >> $FILE
-  echo "export PATH=${AWS_UTILITIES_BIN}:$PATH" >> $FILE
+  echo "AWS_UTILITIES=${REPO}"                  >> $FILE
+  echo 'export PATH=${AWS_UTILITIES}/bin:$PATH' >> $FILE
 
   FILE=~/.bashrc
-  echo                                  >> $FILE
-  echo "source ${REPO}/dotfiles/bashrc" >> $FILE
+  echo                                           >> $FILE
+  echo "AWS_UTILITIES=${REPO}"                   >> $FILE
+  echo 'source ${AWS_UTILITIES}/dotfiles/bashrc' >> $FILE
 fi
