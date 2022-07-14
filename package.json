@@ -1,0 +1,24 @@
+{
+  "name": "aws-utilities",
+  "version": "1.0.0",
+  "description": "This is a collection of simple command-line scripts, bash aliases, and bash utilities that make using the AWS CLI even easier.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rkiel/aws-utilities.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rkiel/aws-utilities/issues"
+  },
+  "homepage": "https://github.com/rkiel/aws-utilities#readme"
+}
