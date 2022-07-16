@@ -9,7 +9,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "awsgenerate": "node ./lib/generate/commander.js"
+    "awsgenerate": "node ./lib/generate/commander.js",
+    "create": "aws cloudformation create-stack --stack-name test-one --template-body file://test-one.json",
+    "delete": "aws cloudformation delete-stack --stack-name test-one",
+    "update": "aws cloudformation update-stack --stack-name test-one --template-body file://test-one.json"
   },
   "repository": {
     "type": "git",
