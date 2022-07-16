@@ -1,10 +1,2 @@
-#!/usr/bin/env ruby
+npm run awsgenerate -- $@
 
-require_relative '../lib/generate/commander'
-
-commander = Generate::Commander.new(ARGV)
-if commander.valid?
-  commander.execute
-else
-  commander.usage
-end
