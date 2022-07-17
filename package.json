@@ -10,9 +10,12 @@
   },
   "scripts": {
     "awsgenerate": "node ./lib/generate/commander.js",
-    "create": "aws cloudformation create-stack --stack-name test-one --template-body file://test-one.json",
-    "delete": "aws cloudformation delete-stack --stack-name test-one",
-    "update": "aws cloudformation update-stack --stack-name test-one --template-body file://test-one.json"
+    "precreate:dev": "npm run awsgenerate cognito",
+    "preupdate:dev": "npm run awsgenerate cognito",
+    "postdelete:dev": "rm -rf mysampleapp-dev-cloud-formation.json",
+    "create:dev": "aws cloudformation create-stack --stack-name my-sample-app-dev --template-body file://mysampleapp-dev-cloud-formation.json",
+    "delete:dev": "aws cloudformation delete-stack --stack-name my-sample-app-dev",
+    "update:dev": "aws cloudformation update-stack --stack-name my-sample-app-dev --template-body file://mysampleapp-dev-cloud-formation.json"
   },
   "repository": {
     "type": "git",
